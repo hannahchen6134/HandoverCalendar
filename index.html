@@ -1977,6 +1977,308 @@
   }
 </style>
 
+
+<style id="mobile-calendar-alignment-v3">
+  /* 每格固定同高，數字與色塊不會上下亂跑。 */
+  .calendar-shell.overview-mode .calendar {
+    grid-auto-rows: var(--overview-cell-height) !important;
+    align-items: stretch !important;
+  }
+
+  .day-overview {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 7px 5px !important;
+    overflow: hidden !important;
+  }
+
+  .overview-date {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    max-width: 100%;
+    line-height: 1 !important;
+  }
+
+  .day-shift-compact {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-top: auto !important;
+    padding-top: 6px;
+    gap: 3px !important;
+  }
+
+  .compact-shift-chip,
+  .compact-shift-more {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 17px !important;
+    padding: 1px 2px !important;
+    overflow: hidden !important;
+    font-size: 9px !important;
+    line-height: 15px !important;
+    text-align: center !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* 今天只用整格暖色與日期圓形標示，不再塞「今天」兩字造成溢出。 */
+  .day-overview.today {
+    padding: 5px 3px !important;
+    border: 3px solid #6b4f3b !important;
+    background: #f3dfc8 !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.7) !important;
+  }
+
+  .day-overview.today .overview-date {
+    display: inline-flex !important;
+    width: 31px !important;
+    min-width: 31px !important;
+    height: 31px !important;
+    min-height: 31px !important;
+    padding: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 999px !important;
+    background: #6b4f3b !important;
+    color: #fff !important;
+  }
+
+  .day-overview.today .overview-date::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* 放大後完整資訊仍對齊，不讓姓名或時間超出。 */
+  .calendar-shell.overview-mode.zoomed-overview .day-overview {
+    height: 100% !important;
+    padding: 8px !important;
+  }
+
+  .calendar-shell.overview-mode.zoomed-overview .day-shift-full {
+    width: 100%;
+    min-width: 0;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+
+  .calendar-shell.overview-mode.zoomed-overview .full-shift-chip {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .calendar-shell.overview-mode.zoomed-overview .full-shift-person,
+  .calendar-shell.overview-mode.zoomed-overview .full-shift-time {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 底部按鈕中的「無排班」保留清楚可讀，不擠出按鈕。 */
+  .brush[data-brush="blocked"] {
+    font-size: 12px !important;
+    letter-spacing: 0 !important;
+  }
+
+  @media (max-width: 390px) {
+    .day-overview {
+      padding: 6px 4px !important;
+    }
+
+    .overview-date {
+      font-size: 14px !important;
+    }
+
+    .compact-shift-chip,
+    .compact-shift-more {
+      height: 16px !important;
+      font-size: 8px !important;
+      line-height: 14px !important;
+    }
+
+    .day-overview.today {
+      padding: 4px 2px !important;
+    }
+
+    .day-overview.today .overview-date {
+      width: 29px !important;
+      min-width: 29px !important;
+      height: 29px !important;
+      min-height: 29px !important;
+    }
+  }
+</style>
+
+
+<style id="solid-tool-buttons-v1">
+  /* 固定工具按鈕直接使用整格顏色，長輩可一眼辨認。 */
+  .brush[data-brush="blue"] {
+    background: var(--blue) !important;
+    border-color: #2f5f91 !important;
+    color: #fff !important;
+  }
+
+  .brush[data-brush="green"] {
+    background: var(--green) !important;
+    border-color: #356749 !important;
+    color: #fff !important;
+  }
+
+  .brush[data-brush="yellow"] {
+    background: var(--yellow) !important;
+    border-color: #a88725 !important;
+    color: #2d271f !important;
+  }
+
+  .brush[data-brush="blocked"] {
+    background:
+      repeating-linear-gradient(
+        135deg,
+        #5f5b57 0,
+        #5f5b57 8px,
+        #817b75 8px,
+        #817b75 16px
+      ) !important;
+    border-color: #4d4844 !important;
+    color: #fff !important;
+  }
+
+  .brush[data-brush="erase"] {
+    background: #fffdf9 !important;
+    border-color: var(--border-strong) !important;
+    color: var(--text) !important;
+  }
+
+  /* 整格已經有顏色，不再需要上方小圓點重複提示。 */
+  .brush[data-brush="blue"]::before,
+  .brush[data-brush="green"]::before,
+  .brush[data-brush="yellow"]::before,
+  .brush[data-brush="blocked"]::before {
+    display: none !important;
+  }
+
+  .brush[data-brush="erase"]::before {
+    display: block !important;
+    margin: 0 auto 5px !important;
+  }
+
+  /* 選取狀態靠黑框和勾勾，不只靠色差。 */
+  .brush.active {
+    border: 4px solid #171411 !important;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.75) !important;
+    transform: none !important;
+  }
+
+  .brush.active::after {
+    top: 5px !important;
+    right: 5px !important;
+    background: #171411 !important;
+    color: #fff !important;
+    border: 2px solid #fff !important;
+  }
+
+  .brush[data-brush="yellow"].active::after,
+  .brush[data-brush="erase"].active::after {
+    border-color: #fff !important;
+  }
+
+  @media (max-width: 760px) {
+    .brush {
+      min-height: 58px !important;
+      padding: 9px 3px !important;
+      font-size: 14px !important;
+      line-height: 1.15 !important;
+    }
+
+    .brush[data-brush="blocked"] {
+      font-size: 12px !important;
+    }
+  }
+</style>
+
+
+<style id="uniform-tool-buttons-v2">
+  /* 五個固定工具按鈕使用一致的字級、位置與高度。 */
+  .brush,
+  .brush[data-brush="blue"],
+  .brush[data-brush="green"],
+  .brush[data-brush="yellow"],
+  .brush[data-brush="blocked"],
+  .brush[data-brush="erase"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 64px !important;
+    padding: 8px 4px !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    line-height: 1.15 !important;
+    letter-spacing: 0 !important;
+    text-align: center !important;
+  }
+
+  /* 無排班改成純灰色，不使用斜紋。 */
+  .brush[data-brush="blocked"] {
+    background: #6f6a65 !important;
+    border-color: #514c48 !important;
+    color: #fff !important;
+  }
+
+  /* 清除只使用白底與文字，不再顯示額外圖示。 */
+  .brush[data-brush="erase"] {
+    background: #fffdf9 !important;
+    border-color: var(--border-strong) !important;
+    color: var(--text) !important;
+  }
+
+  .brush[data-brush="blue"]::before,
+  .brush[data-brush="green"]::before,
+  .brush[data-brush="yellow"]::before,
+  .brush[data-brush="blocked"]::before,
+  .brush[data-brush="erase"]::before {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* 選取狀態仍靠黑框和勾勾辨識。 */
+  .brush.active {
+    border: 4px solid #171411 !important;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.72) !important;
+  }
+
+  @media (max-width: 760px) {
+    .brush,
+    .brush[data-brush="blue"],
+    .brush[data-brush="green"],
+    .brush[data-brush="yellow"],
+    .brush[data-brush="blocked"],
+    .brush[data-brush="erase"] {
+      min-height: 58px !important;
+      padding: 7px 2px !important;
+      font-size: 14px !important;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .brush,
+    .brush[data-brush="blue"],
+    .brush[data-brush="green"],
+    .brush[data-brush="yellow"],
+    .brush[data-brush="blocked"],
+    .brush[data-brush="erase"] {
+      min-height: 56px !important;
+      font-size: 12px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
   <main class="app">
@@ -1991,12 +2293,12 @@
             <button id="openSettings" class="settings-btn" type="button">設定</button>
           </div>
 
-          <span class="section-label">選擇人員或功能 → 點一下／長按拖動時間</span>
+          <span class="section-label">選擇人員或功能 → 點一下／長按登記排班時間</span>
           <div class="brushes" role="group" aria-label="畫筆顏色">
             <button class="brush active" type="button" data-brush="blue" aria-pressed="true">藍</button>
             <button class="brush" type="button" data-brush="green" aria-pressed="false">綠</button>
             <button class="brush" type="button" data-brush="yellow" aria-pressed="false">黃</button>
-            <button class="brush" type="button" data-brush="blocked" aria-pressed="false">不可</button>
+            <button class="brush" type="button" data-brush="blocked" aria-pressed="false">無排班</button>
             <button class="brush" type="button" data-brush="erase" aria-pressed="false">清除</button>
           </div>
 
@@ -2066,7 +2368,7 @@
         <span class="legend-item"><span class="dot blue"></span><span id="legendBlue">藍色</span></span>
         <span class="legend-item"><span class="dot green"></span><span id="legendGreen">綠色</span></span>
         <span class="legend-item"><span class="dot yellow"></span><span id="legendYellow">黃色</span></span>
-        <span class="legend-item"><span class="dot blocked"></span>不能排</span>
+        <span class="legend-item"><span class="dot blocked"></span>無排班</span>
       </div>
 
       <div class="footer-actions">
@@ -2324,10 +2626,10 @@
       function updateBrushLabels() {
         document.querySelectorAll(".brush").forEach((button) => {
           const value = button.dataset.brush;
-          const label = value === "blocked" ? "不可" : value === "erase" ? "清除" : people[value];
+          const label = value === "blocked" ? "無排班" : value === "erase" ? "清除" : people[value];
           button.textContent = label;
           button.title = label;
-          button.setAttribute("aria-label", value === "blocked" ? "標記不能安排" : value === "erase" ? "清除時段" : `選擇${label}`);
+          button.setAttribute("aria-label", value === "blocked" ? "標記無排班" : value === "erase" ? "清除時段" : `選擇${label}`);
           if (people[value]) {
             const legendId = `legend${value[0].toUpperCase()}${value.slice(1)}`;
             const legend = document.getElementById(legendId);
@@ -2376,7 +2678,7 @@
       }
 
       function colorLabel(color) {
-        return color === "blocked" ? "不能排" : people[color] || color;
+        return color === "blocked" ? "無排班" : people[color] || color;
       }
 
       function render() {
@@ -2431,7 +2733,7 @@
           }
 
           const name = entry.color === "blocked"
-            ? "不能排"
+            ? "無排班"
             : entry.name || colorLabel(entry.color);
           const signature = `${entry.color}|${name}`;
 
@@ -2467,7 +2769,7 @@
       }
 
       function compactPersonName(segment) {
-        if (segment.color === "blocked") return "不可";
+        if (segment.color === "blocked") return "無排班";
         const label = segment.name || colorLabel(segment.color);
         return label.length > 2 ? label.slice(0, 2) : label;
       }
@@ -2570,14 +2872,14 @@
         time.textContent = formatHour(hour);
         const name = document.createElement("span");
         name.className = "hour-name";
-        name.textContent = value ? (value.color === "blocked" ? "不可" : value.name || colorLabel(value.color)) : "";
+        name.textContent = value ? (value.color === "blocked" ? "無排班" : value.name || colorLabel(value.color)) : "";
         button.append(time, name);
         updateHourAria(button, day, hour, value);
         return button;
       }
 
       function updateHourAria(button, day, hour, value) {
-        const displayName = value?.color === "blocked" ? "，不能安排" : value?.name ? `，${value.name}` : "";
+        const displayName = value?.color === "blocked" ? "，無排班" : value?.name ? `，${value.name}` : "";
         button.setAttribute("aria-label", `${month + 1}月${day}日 ${formatRange(hour)}${displayName}`);
       }
 
@@ -2585,7 +2887,7 @@
         button.classList.remove("blue", "green", "yellow", "blocked");
         if (value) button.classList.add(value.color);
         const name = button.querySelector(".hour-name");
-        if (name) name.textContent = value ? (value.color === "blocked" ? "不可" : value.name || colorLabel(value.color)) : "";
+        if (name) name.textContent = value ? (value.color === "blocked" ? "無排班" : value.name || colorLabel(value.color)) : "";
         updateHourAria(button, Number(button.dataset.day), Number(button.dataset.hour), value);
       }
 
@@ -2687,7 +2989,7 @@
             formatHour(hour),
             formatHour(hour + 1),
             entry.color === "blocked" ? "" : entry.name || colorLabel(entry.color),
-            entry.color === "blocked" ? "不能排" : "已排班",
+            entry.color === "blocked" ? "無排班" : "已排班",
             entry.color
           ]);
         });
@@ -2711,7 +3013,7 @@
           const [date, start, , name, state, color] = parseCsvLine(line);
           if (!date?.startsWith(`${YEAR}-`)) return;
           const hour = Number(start?.slice(0, 2));
-          const safeColor = state === "不能排" ? "blocked" : color;
+          const safeColor = (state === "不能排" || state === "無排班") ? "blocked" : color;
           if (!Number.isInteger(hour) || hour < 0 || hour > 23 || !["blue", "green", "yellow", "blocked"].includes(safeColor)) return;
           const key = `${date}-${String(hour).padStart(2, "0")}`;
           if (!changes.has(key)) changes.set(key, schedule[key] ? { ...schedule[key] } : null);
@@ -2750,8 +3052,8 @@
           status.textContent = brush === "erase"
             ? "已選清除：點一下或長按拖動可擦除時段。"
             : brush === "blocked"
-              ? "已選不能排：點一下或長按拖動可連續標記。"
-              : `已選${colorLabel(brush)}：點一下或長按拖動時間。`;
+              ? "已選無排班：點一下或長按拖動可連續標記。"
+              : `已選${colorLabel(brush)}：點一下或長按登記排班時間。`;
         });
       });
 
@@ -2965,7 +3267,7 @@
       render();
       status.textContent = cloudEnabled()
         ? "正在連線 Google Sheet…"
-        : `目前選擇：${colorLabel(brush)}。點一下或長按拖動時間。`;
+        : `目前選擇：${colorLabel(brush)}。點一下或長按登記排班時間。`;
       if (cloudEnabled()) {
         loadRemoteState();
         window.addEventListener("online", processRemoteQueue);
