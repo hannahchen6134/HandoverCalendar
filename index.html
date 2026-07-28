@@ -2279,6 +2279,298 @@
   }
 </style>
 
+
+<style id="mobile-calendar-comfort-v1">
+  /*
+    手機月曆重新排版：
+    - 日期固定左上角
+    - 今天以整格淡色、外框與右上角「今」標記
+    - 排班姓名固定在格子下方
+    - 不再使用可能超出格子的日期膠囊
+  */
+  @media (max-width: 760px) {
+    :root {
+      --overview-cell-height: 82px !important;
+    }
+
+    .calendar-shell.overview-mode {
+      overflow: hidden !important;
+    }
+
+    .calendar-shell.overview-mode .calendar-stage {
+      width: 100% !important;
+      min-width: 0 !important;
+      padding: 8px !important;
+    }
+
+    .calendar-shell.overview-mode .weekdays,
+    .calendar-shell.overview-mode .calendar {
+      width: 100% !important;
+      grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+      column-gap: 4px !important;
+    }
+
+    .calendar-shell.overview-mode .calendar {
+      row-gap: 5px !important;
+      grid-auto-rows: var(--overview-cell-height) !important;
+      align-items: stretch !important;
+    }
+
+    .calendar-shell.overview-mode .weekdays {
+      padding-bottom: 7px !important;
+    }
+
+    .calendar-shell.overview-mode .weekday {
+      min-width: 0 !important;
+      padding: 8px 0 !important;
+      border-radius: 7px !important;
+      font-size: 15px !important;
+      line-height: 1 !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview {
+      position: relative !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      justify-content: flex-start !important;
+      width: 100% !important;
+      height: 100% !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      padding: 7px 5px 5px !important;
+      border: 1.5px solid var(--border) !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      background: #fffdf9 !important;
+      box-shadow: none !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview.empty {
+      border-color: transparent !important;
+      background: transparent !important;
+    }
+
+    .calendar-shell.overview-mode .overview-date {
+      position: static !important;
+      display: block !important;
+      flex: 0 0 auto !important;
+      align-self: flex-start !important;
+      width: auto !important;
+      min-width: 0 !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-width: calc(100% - 22px) !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      color: var(--text) !important;
+      font-size: 17px !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+    }
+
+    /* 徹底移除舊版塞在日期旁邊的「今天」文字。 */
+    .calendar-shell.overview-mode .day-overview.today .overview-date::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    /* 今天：整格淡暖色＋深色外框＋右上角小「今」標記。 */
+    .calendar-shell.overview-mode .day-overview.today {
+      padding: 6px 4px 4px !important;
+      border: 2.5px solid #6b4f3b !important;
+      background: #f5e4d2 !important;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.75) !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview.today::after {
+      content: "今" !important;
+      position: absolute !important;
+      top: 5px !important;
+      right: 5px !important;
+      display: flex !important;
+      width: 18px !important;
+      height: 18px !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 999px !important;
+      background: #6b4f3b !important;
+      color: #fff !important;
+      font-size: 10px !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview.today .overview-date {
+      background: transparent !important;
+      color: #3f2e22 !important;
+    }
+
+    /* 排班姓名固定貼齊格子下方。 */
+    .calendar-shell.overview-mode .day-shift-compact {
+      display: grid !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      margin-top: auto !important;
+      padding-top: 5px !important;
+      gap: 3px !important;
+    }
+
+    .calendar-shell.overview-mode .compact-shift-chip,
+    .calendar-shell.overview-mode .compact-shift-more {
+      display: block !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      height: 17px !important;
+      padding: 1px 2px !important;
+      border-radius: 4px !important;
+      overflow: hidden !important;
+      font-size: 9px !important;
+      font-weight: 900 !important;
+      line-height: 15px !important;
+      text-align: center !important;
+      text-overflow: ellipsis !important;
+      white-space: nowrap !important;
+    }
+
+    /* 放大模式維持完整人名＋時間，但格內仍不得溢出。 */
+    .calendar-shell.overview-mode.zoomed-overview {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+    }
+
+    .calendar-shell.overview-mode.zoomed-overview .day-overview {
+      padding: 8px !important;
+    }
+
+    .calendar-shell.overview-mode.zoomed-overview .day-shift-full,
+    .calendar-shell.overview-mode.zoomed-overview .full-shift-chip,
+    .calendar-shell.overview-mode.zoomed-overview .full-shift-person,
+    .calendar-shell.overview-mode.zoomed-overview .full-shift-time {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+
+    .calendar-shell.overview-mode.zoomed-overview .full-shift-person,
+    .calendar-shell.overview-mode.zoomed-overview .full-shift-time {
+      text-overflow: ellipsis !important;
+    }
+  }
+
+  @media (max-width: 350px) {
+    :root {
+      --overview-cell-height: 78px !important;
+    }
+
+    .calendar-shell.overview-mode .calendar-stage {
+      padding: 6px !important;
+    }
+
+    .calendar-shell.overview-mode .weekdays,
+    .calendar-shell.overview-mode .calendar {
+      column-gap: 3px !important;
+    }
+
+    .calendar-shell.overview-mode .calendar {
+      row-gap: 4px !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview {
+      padding: 6px 4px 4px !important;
+      border-radius: 7px !important;
+    }
+
+    .calendar-shell.overview-mode .overview-date {
+      font-size: 15px !important;
+    }
+
+    .calendar-shell.overview-mode .compact-shift-chip,
+    .calendar-shell.overview-mode .compact-shift-more {
+      height: 16px !important;
+      font-size: 8px !important;
+      line-height: 14px !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview.today::after {
+      top: 4px !important;
+      right: 4px !important;
+      width: 17px !important;
+      height: 17px !important;
+      font-size: 9px !important;
+    }
+  }
+</style>
+
+
+<style id="mobile-calendar-comfort-v2">
+  @media (max-width: 760px) {
+    /* 日期文字保留完整寬度，不被右上角標記擠壓。 */
+    .calendar-shell.overview-mode .overview-date {
+      width: auto !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      white-space: nowrap !important;
+    }
+
+    /*
+      今天不再顯示「今／今天」文字。
+      七欄月曆在小手機上每格很窄，使用整格顏色與外框最穩定。
+    */
+    .calendar-shell.overview-mode .day-overview.today {
+      padding: 6px 4px 4px !important;
+      border: 2.5px solid #6b4f3b !important;
+      background: #f2dfca !important;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.78) !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview.today::after,
+    .calendar-shell.overview-mode .day-overview.today .overview-date::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .calendar-shell.overview-mode .day-overview.today .overview-date {
+      display: block !important;
+      width: auto !important;
+      min-width: 0 !important;
+      height: auto !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      color: #3f2e22 !important;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .calendar-shell.overview-mode .day-overview.today {
+      padding: 5px 3px 3px !important;
+      border-width: 2px !important;
+    }
+
+    .calendar-shell.overview-mode .overview-date {
+      font-size: 15px !important;
+    }
+  }
+</style>
+
+
+<style id="remove-duplicate-legend-v1">
+  .legend {
+    display: none !important;
+  }
+
+  /* 同一日期中的摘要人員維持單列、置中、易讀。 */
+  .day-shift-compact {
+    max-height: 57px;
+    overflow: hidden;
+  }
+</style>
+
 </head>
 <body>
   <main class="app">
@@ -2790,19 +3082,30 @@
         const compactList = document.createElement("span");
         compactList.className = "day-shift-compact";
 
+        // 小月曆只顯示「當天有哪些人」，同一人即使有多段時間也只出現一次。
+        const uniquePeople = [];
+        const seenPeople = new Set();
+
+        segments.forEach((segment) => {
+          const key = `${segment.color}|${segment.name}`;
+          if (seenPeople.has(key)) return;
+          seenPeople.add(key);
+          uniquePeople.push(segment);
+        });
+
         const compactLimit = 3;
-        segments.slice(0, compactLimit).forEach((segment) => {
+        uniquePeople.slice(0, compactLimit).forEach((segment) => {
           const chip = document.createElement("span");
           chip.className = `compact-shift-chip ${segment.color}`;
           chip.textContent = compactPersonName(segment);
-          chip.title = `${segment.name} ${formatShiftRange(segment.start, segment.end)}`;
+          chip.title = segment.name;
           compactList.appendChild(chip);
         });
 
-        if (segments.length > compactLimit) {
+        if (uniquePeople.length > compactLimit) {
           const more = document.createElement("span");
           more.className = "compact-shift-more";
-          more.textContent = `＋${segments.length - compactLimit} 段`;
+          more.textContent = `＋${uniquePeople.length - compactLimit} 人`;
           compactList.appendChild(more);
         }
 
