@@ -1596,150 +1596,6 @@
   .brush { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   @media (max-width: 760px) { .undo-btn { min-height: 52px; font-size: 17px; } }
 </style>
-
-<style id="v14-calendar-first-ui">
-  /* 月曆優先：首頁只保留標題、月份與整月總覽。 */
-  :root { --overview-cell-height: 72px; }
-  .status { display: none !important; }
-  .topbar-panel { position: relative; }
-  .detail-header { display: none; }
-  .calendar-shell.overview-mode { overflow: hidden; }
-  .calendar-shell.overview-mode .calendar-stage { width: 100%; min-width: 0; }
-  .calendar-shell.overview-mode .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    width: 100%;
-  }
-  .calendar-shell.overview-mode .weekday { min-width: 0; }
-  .calendar-shell.overview-mode .calendar {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 4px;
-    width: 100%;
-  }
-  .day-overview {
-    min-width: 0;
-    min-height: var(--overview-cell-height);
-    padding: 6px 5px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: #fffdf9;
-    color: var(--text);
-    text-align: left;
-    cursor: pointer;
-  }
-  .day-overview:active { transform: scale(.97); }
-  .day-overview.today { border: 3px solid var(--text); padding: 4px 3px; }
-  .day-overview.empty { background: transparent; border-color: transparent; pointer-events: none; }
-  .overview-date { display: block; font-size: 16px; font-weight: 900; line-height: 1; }
-  .day-overview.today .overview-date::after {
-    content: "今";
-    margin-left: 3px;
-    font-size: 10px;
-    font-weight: 900;
-    color: var(--blue-dark);
-  }
-  .day-shift-strip {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin-top: 7px;
-  }
-  .shift-mark { height: 4px; border-radius: 2px; background: #ece7df; }
-  .shift-mark.blue { background: var(--blue); }
-  .shift-mark.green { background: var(--green); }
-  .shift-mark.yellow { background: var(--yellow); }
-  .shift-mark.blocked { background: #777; }
-  .calendar-shell.detail-mode { overflow: visible; }
-  .calendar-shell.detail-mode .weekdays { display: none; }
-  .calendar-shell.detail-mode .detail-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px;
-    border-bottom: 2px solid var(--border-strong);
-    background: #fffdf9;
-  }
-  .detail-back {
-    min-height: 44px;
-    padding: 0 14px;
-    border: 2px solid var(--border-strong);
-    border-radius: 10px;
-    background: #fff;
-    color: var(--text);
-    font-size: 16px;
-    font-weight: 900;
-  }
-  .detail-date { font-size: 20px; font-weight: 950; }
-  .calendar-shell.detail-mode .calendar { display: block; width: 100%; }
-  .calendar-shell.detail-mode .day { width: 100%; min-width: 0; border: 0; border-radius: 0; }
-  .calendar-shell.detail-mode .day-header { display: none; }
-  .calendar-shell.detail-mode .hours { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 10px; }
-  .calendar-shell.detail-mode .hour { min-height: var(--slot-height); border-radius: 8px; }
-
-  @media (max-width: 760px) {
-    body { padding-bottom: 10px; }
-    .app { width: 100%; padding: 0 8px 16px; }
-    .topbar { position: sticky; top: 0; z-index: 50; padding: 8px 0 6px; background: var(--bg); }
-    .topbar-panel { padding: 8px 10px 10px !important; border-radius: 12px !important; }
-    .brand-row { min-height: 44px; padding-right: 146px; }
-    .brand::before { display: none !important; }
-    .brand-title { font-size: 23px !important; line-height: 1 !important; }
-    .current-user, .section-label, .swipe-guide, .legend, .save-note { display: none !important; }
-    .settings-btn { position: absolute; top: 8px; right: 8px; min-height: 42px !important; width: 82px; padding: 0 8px !important; font-size: 15px !important; border-width: 1px !important; }
-    .tools-toggle { position: absolute; top: 8px; right: 96px; width: 46px !important; min-height: 42px !important; margin: 0 !important; padding: 0 !important; font-size: 0 !important; border-width: 1px !important; }
-    .tools-toggle::before { content: "⋯"; font-size: 25px; line-height: 1; }
-    .tools-toggle-icon { display: none; }
-    .month-bar { grid-template-columns: 48px minmax(0, 1fr) 48px !important; gap: 6px !important; margin-top: 4px !important; }
-    .month-title { font-size: 22px !important; white-space: nowrap; }
-    .nav-btn { min-height: 44px !important; padding: 0 !important; font-size: 0 !important; border-width: 1px !important; }
-    #prevMonth::before { content: "‹"; font-size: 34px; }
-    #nextMonth::before { content: "›"; font-size: 34px; }
-    .more-tools { position: absolute; z-index: 80; top: 56px; right: 8px; left: 8px; padding: 10px !important; box-shadow: 0 10px 24px rgba(41,35,29,.18); }
-    .tool-help { display: none !important; }
-    .utility-row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-    .utility-btn { min-height: 44px !important; font-size: 14px !important; padding: 6px !important; }
-    .zoom-value { display: grid; place-items: center; min-height: 44px; }
-    .calendar-shell { margin-top: 2px !important; border-radius: 12px !important; }
-    .calendar-shell.overview-mode { border: 0 !important; box-shadow: none !important; background: transparent !important; }
-    .calendar-shell.overview-mode .weekdays { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding: 0 0 5px; }
-    .calendar-shell.overview-mode .weekday { min-width: 0; padding: 4px 0; border: 0; background: transparent; font-size: 14px; }
-    .calendar-shell.overview-mode .calendar { gap: 4px; }
-    .day-overview { min-height: var(--overview-cell-height); padding: 5px 4px; border-radius: 7px; }
-    .overview-date { font-size: 15px; }
-    .day-shift-strip { gap: 2px; margin-top: 6px; }
-    .shift-mark { height: 3px; }
-    .footer-actions { display: none !important; }
-    body.view-month .brushes, body.view-month .status, body.view-month .undo-btn { display: none !important; }
-    body.view-detail .brand-row, body.view-detail .month-bar, body.view-detail .tools-toggle { display: none !important; }
-    body.view-detail .topbar { position: static; padding: 0; }
-    body.view-detail .topbar-panel { padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
-    body.view-detail .brushes {
-      position: fixed;
-      z-index: 100;
-      right: 6px !important;
-      bottom: max(6px, env(safe-area-inset-bottom));
-      left: 6px !important;
-      display: grid !important;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 4px !important;
-      padding: 5px !important;
-      border: 1px solid var(--border-strong);
-      border-radius: 12px;
-      background: rgba(255,253,249,.98);
-      box-shadow: 0 4px 18px rgba(41,35,29,.2);
-    }
-    body.view-detail .brush { min-width: 0; min-height: 48px !important; padding: 5px 2px !important; font-size: 13px !important; border-width: 1px !important; }
-    body.view-detail .status { position: fixed; z-index: 101; right: 18px; bottom: 68px; left: 18px; min-height: 0 !important; padding: 8px 12px !important; border: 0 !important; border-radius: 999px !important; background: #2f2a25 !important; color: #fff !important; font-size: 14px !important; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 4px 14px rgba(0,0,0,.18); }
-    body.view-detail .undo-btn { position: fixed; z-index: 102; right: 12px; bottom: 116px; width: auto; min-height: 42px; margin: 0; padding: 0 14px; font-size: 14px; }
-    body.view-detail #calendarShell { margin-bottom: 78px !important; }
-    .calendar-shell.detail-mode .hours { grid-template-columns: 1fr; padding: 8px; }
-    .calendar-shell.detail-mode .hour { min-height: 48px; font-size: 16px; }
-    .settings-page { padding: 8px !important; }
-    .settings-help:last-of-type { display: none; }
-  }
-</style>
 </head>
 <body>
   <main class="app">
@@ -1751,7 +1607,7 @@
               <h1 class="brand-title">交班月曆</h1>
               <div id="currentUser" class="current-user">尚未設定人員</div>
             </div>
-            <button id="openSettings" class="settings-btn" type="button">設定</button>
+            <button id="openSettings" class="settings-btn" type="button">人員設定</button>
           </div>
 
           <span class="section-label">選擇人員或功能 → 點一下／長按拖動時間</span>
@@ -1787,9 +1643,9 @@
 
           <div id="moreTools" class="more-tools hidden" aria-hidden="true">
             <div class="utility-row">
-              <button id="zoomOut" class="utility-btn" type="button" aria-label="縮小月曆">－</button>
+              <button id="zoomOut" class="utility-btn" type="button" aria-label="縮小月曆">縮小</button>
               <span id="zoomValue" class="zoom-value">100%</span>
-              <button id="zoomIn" class="utility-btn" type="button" aria-label="放大月曆">＋</button>
+              <button id="zoomIn" class="utility-btn" type="button" aria-label="放大月曆">放大</button>
               <button id="zoomReset" class="utility-btn" type="button">原大小</button>
               <button id="goToday" class="utility-btn" type="button">回到本月</button>
               <button id="downloadBackup" class="utility-btn" type="button">下載 Excel 備份</button>
@@ -1808,10 +1664,6 @@
 
       <section id="calendarShell" class="calendar-shell" aria-label="整月交班月曆">
         <div class="calendar-stage">
-          <div id="detailHeader" class="detail-header">
-            <button id="backToMonth" class="detail-back" type="button">‹ 整月</button>
-            <div id="detailDate" class="detail-date"></div>
-          </div>
           <div class="weekdays" aria-hidden="true">
             <div class="weekday sun">日</div>
             <div class="weekday">一</div>
@@ -1851,7 +1703,9 @@
           <button id="closeSettings" class="back-btn" type="button">返回月曆</button>
         </div>
 
-        <p class="settings-help">輸入三位排班人員的名字。</p>
+        <p class="settings-help">
+          請設定三個排班按鈕要顯示的人名。儲存後，首頁按鈕及已填時段會一起改名。
+        </p>
 
         <div class="settings-people">
           <div class="person-field">
@@ -1904,9 +1758,7 @@
 
       let month = now.getMonth();
       let brush = "blue";
-      let scale = window.innerWidth <= 760 ? 1 : 1;
-      let viewMode = "month";
-      let selectedDay = now.getDate();
+      let scale = window.innerWidth <= 760 ? 0.88 : 1;
       let schedule = loadSchedule();
       let people = loadPeople();
       const undoStack = [];
@@ -1922,7 +1774,6 @@
       const prevMonthButton = document.getElementById("prevMonth");
       const nextMonthButton = document.getElementById("nextMonth");
       const undoButton = document.getElementById("undoLast");
-      const detailDate = document.getElementById("detailDate");
       const nameInputs = {
         blue: document.getElementById("blueName"),
         green: document.getElementById("greenName"),
@@ -2147,19 +1998,6 @@
         prevMonthButton.disabled = month === 0;
         nextMonthButton.disabled = month === 11;
         calendar.innerHTML = "";
-        document.body.classList.toggle("view-month", viewMode === "month");
-        document.body.classList.toggle("view-detail", viewMode === "detail");
-        calendarShell.classList.toggle("overview-mode", viewMode === "month");
-        calendarShell.classList.toggle("detail-mode", viewMode === "detail");
-        calendarShell.setAttribute("aria-label", viewMode === "month" ? "整月交班月曆" : `${month + 1}月${selectedDay}日排班`);
-        if (viewMode === "detail") {
-          selectedDay = Math.max(1, Math.min(monthDays(), selectedDay));
-          const weekday = ["日", "一", "二", "三", "四", "五", "六"][new Date(YEAR, month, selectedDay).getDay()];
-          detailDate.textContent = `${month + 1}月${selectedDay}日（${weekday}）`;
-          calendar.appendChild(createDay(selectedDay));
-          applyScale();
-          return;
-        }
         const firstWeekday = new Date(YEAR, month, 1).getDay();
         const totalDays = monthDays();
         const totalCells = Math.ceil((firstWeekday + totalDays) / 7) * 7;
@@ -2167,42 +2005,14 @@
           const day = index - firstWeekday + 1;
           if (day < 1 || day > totalDays) {
             const empty = document.createElement("div");
-            empty.className = "day-overview empty";
+            empty.className = "day empty";
             empty.setAttribute("aria-hidden", "true");
             calendar.appendChild(empty);
             continue;
           }
-          calendar.appendChild(createMonthDay(day));
+          calendar.appendChild(createDay(day));
         }
         applyScale();
-      }
-
-      function createMonthDay(day) {
-        const isToday = now.getFullYear() === YEAR && now.getMonth() === month && now.getDate() === day;
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `day-overview${isToday ? " today" : ""}`;
-        button.dataset.day = String(day);
-        const counts = { blue: 0, green: 0, yellow: 0, blocked: 0 };
-        const date = document.createElement("span");
-        date.className = "overview-date";
-        date.textContent = day;
-        const strip = document.createElement("span");
-        strip.className = "day-shift-strip";
-        for (let hour = 0; hour < 24; hour += 1) {
-          const entry = schedule[slotKey(day, hour)];
-          const mark = document.createElement("span");
-          mark.className = `shift-mark${entry ? ` ${entry.color}` : ""}`;
-          strip.appendChild(mark);
-          if (entry && counts[entry.color] !== undefined) counts[entry.color] += 1;
-        }
-        const summary = Object.entries(counts)
-          .filter(([, count]) => count)
-          .map(([color, count]) => `${colorLabel(color)}${count}小時`)
-          .join("、");
-        button.setAttribute("aria-label", `${month + 1}月${day}日${summary ? `，${summary}` : "，尚未排班"}，點一下排時間`);
-        button.append(date, strip);
-        return button;
       }
 
       function createDay(day) {
@@ -2312,7 +2122,6 @@
         scale = Math.max(0.72, Math.min(1.55, scale));
         document.documentElement.style.setProperty("--day-width", `${Math.round(138 * scale)}px`);
         document.documentElement.style.setProperty("--slot-height", `${Math.round(34 * scale)}px`);
-        document.documentElement.style.setProperty("--overview-cell-height", `${Math.round(68 * scale)}px`);
         zoomValue.textContent = `${Math.round(scale * 100)}%`;
       }
 
@@ -2441,24 +2250,19 @@
         updateCurrentUser();
         render();
         closeSettings();
-        status.textContent = "名字已更新";
+        status.textContent = `已更新人員：${Object.values(people).join("、")}。首頁按鈕與既有時段已同步改名。`;
       });
 
       document.getElementById("prevMonth").addEventListener("click", () => {
-        if (month > 0) { month -= 1; viewMode = "month"; render(); calendarShell.scrollTo({ left: 0, behavior: "smooth" }); }
+        if (month > 0) { month -= 1; render(); calendarShell.scrollTo({ left: 0, behavior: "smooth" }); }
       });
       document.getElementById("nextMonth").addEventListener("click", () => {
-        if (month < 11) { month += 1; viewMode = "month"; render(); calendarShell.scrollTo({ left: 0, behavior: "smooth" }); }
+        if (month < 11) { month += 1; render(); calendarShell.scrollTo({ left: 0, behavior: "smooth" }); }
       });
-      document.getElementById("goToday").addEventListener("click", () => { month = now.getMonth(); selectedDay = now.getDate(); viewMode = "month"; render(); });
+      document.getElementById("goToday").addEventListener("click", () => { month = now.getMonth(); render(); });
       document.getElementById("zoomIn").addEventListener("click", () => { scale += 0.1; applyScale(); });
       document.getElementById("zoomOut").addEventListener("click", () => { scale -= 0.1; applyScale(); });
-      document.getElementById("zoomReset").addEventListener("click", () => { scale = 1; applyScale(); });
-      document.getElementById("backToMonth").addEventListener("click", () => {
-        viewMode = "month";
-        render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
+      document.getElementById("zoomReset").addEventListener("click", () => { scale = window.innerWidth <= 760 ? 0.88 : 1; applyScale(); });
 
       document.getElementById("clearMonth").addEventListener("click", () => {
         const ok = window.confirm(`確定清除 ${YEAR} 年 ${month + 1} 月的全部排班嗎？`);
@@ -2536,14 +2340,6 @@
 
       calendarShell.addEventListener("click", (event) => {
         if (Date.now() < suppressClickUntil) return;
-        const overviewDay = event.target.closest(".day-overview[data-day]");
-        if (overviewDay) {
-          selectedDay = Number(overviewDay.dataset.day);
-          viewMode = "detail";
-          render();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          return;
-        }
         const button = event.target.closest(".hour");
         if (button) paint(Number(button.dataset.day), Number(button.dataset.hour));
       });
@@ -2623,6 +2419,7 @@
       status.textContent = cloudEnabled()
         ? "正在連線 Google Sheet…"
         : `目前選擇：${colorLabel(brush)}。點一下或長按拖動時間。`;
+      if (!localStorage.getItem(PEOPLE_KEY)) openSettings();
       if (cloudEnabled()) {
         loadRemoteState();
         window.addEventListener("online", processRemoteQueue);
