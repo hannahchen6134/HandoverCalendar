@@ -1578,202 +1578,6 @@
   }
 </style>
 
-
-<style id="v13-people-and-drag-paint">
-  .undo-btn { width: 100%; min-height: 50px; margin-top: 8px; border: 2px solid var(--border-strong); border-radius: 10px; background: #fff; color: var(--text); font-size: 16px; font-weight: 900; }
-  .undo-btn.hidden { display: none; }
-  .calendar-shell.is-painting, .calendar-shell.is-painting * { cursor: crosshair !important; user-select: none !important; }
-  .calendar-shell.is-painting .hour { outline: 3px solid rgba(32, 28, 24, .18); outline-offset: -3px; }
-  .settings-people { display: grid; gap: 14px; margin-top: 8px; }
-  .person-field { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: center; }
-  .person-swatch { width: 26px; height: 26px; border: 2px solid rgba(0,0,0,.2); border-radius: 8px; }
-  .person-swatch.blue { background: var(--blue); }
-  .person-swatch.green { background: var(--green); }
-  .person-swatch.yellow { background: var(--yellow); }
-  .person-field-body { min-width: 0; }
-  .person-field .field-label { display: block; margin: 0 0 5px; }
-  .person-field .name-input { width: 100%; }
-  .brush { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  @media (max-width: 760px) { .undo-btn { min-height: 52px; font-size: 17px; } }
-</style>
-
-<style id="v14-calendar-first-ui">
-  /* 月曆優先：首頁只保留標題、月份與整月總覽。 */
-  :root { --overview-cell-height: 72px; --overview-width: 100%; }
-  .status { display: none !important; }
-  .topbar-panel { position: relative; }
-  .detail-header { display: none; }
-  .calendar-shell.overview-mode { overflow: hidden; }
-  .calendar-shell.overview-mode .calendar-stage { width: 100%; min-width: 0; }
-  .calendar-shell.overview-mode .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    width: 100%;
-  }
-  .calendar-shell.overview-mode .weekday { min-width: 0; }
-  .calendar-shell.overview-mode .calendar {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 4px;
-    width: 100%;
-  }
-  .day-overview {
-    min-width: 0;
-    min-height: var(--overview-cell-height);
-    padding: 6px 5px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: #fffdf9;
-    color: var(--text);
-    text-align: left;
-    cursor: pointer;
-  }
-  .day-overview:active { transform: scale(.97); }
-  .day-overview.today { border: 3px solid var(--text); padding: 4px 3px; }
-  .day-overview.empty { background: transparent; border-color: transparent; pointer-events: none; }
-  .overview-date { display: block; font-size: 16px; font-weight: 900; line-height: 1; }
-  .day-overview.today .overview-date::after {
-    content: "今";
-    margin-left: 3px;
-    font-size: 10px;
-    font-weight: 900;
-    color: var(--blue-dark);
-  }
-  .day-shift-strip {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin-top: 7px;
-  }
-  .shift-mark { height: 4px; border-radius: 2px; background: transparent; }
-  .shift-mark.blue { background: #3f7fc5; }
-  .shift-mark.green { background: #3e9368; }
-  .shift-mark.yellow { background: #e4b62e; }
-  .shift-mark.blocked { background: #615c58; }
-  .day-color-summary { display: none; }
-  .calendar-shell.overview-mode.zoomed-overview { overflow-x: auto; overflow-y: hidden; }
-  .calendar-shell.overview-mode.zoomed-overview .calendar-stage {
-    width: var(--overview-width);
-    min-width: var(--overview-width);
-  }
-  .calendar-shell.overview-mode.zoomed-overview .day-overview {
-    min-height: var(--overview-cell-height);
-    padding: 7px;
-  }
-  .calendar-shell.overview-mode.zoomed-overview .overview-date { font-size: 18px; }
-  .calendar-shell.overview-mode.zoomed-overview .day-shift-strip { display: none; }
-  .calendar-shell.overview-mode.zoomed-overview .day-color-summary {
-    display: grid;
-    gap: 4px;
-    margin-top: 8px;
-  }
-  .color-summary-chip {
-    display: block;
-    min-width: 0;
-    padding: 4px 5px;
-    border-radius: 5px;
-    color: #17202a;
-    font-size: 12px;
-    font-weight: 950;
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .color-summary-chip.blue { background: #77abe3; }
-  .color-summary-chip.green { background: #73bc91; }
-  .color-summary-chip.yellow { background: #f0cc62; }
-  .color-summary-chip.blocked { background: #68635f; color: #fff; }
-  .calendar-shell.detail-mode { overflow: visible; }
-  .calendar-shell.detail-mode .weekdays { display: none; }
-  .calendar-shell.detail-mode .detail-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px;
-    border-bottom: 2px solid var(--border-strong);
-    background: #fffdf9;
-  }
-  .detail-back {
-    min-height: 44px;
-    padding: 0 14px;
-    border: 2px solid var(--border-strong);
-    border-radius: 10px;
-    background: #fff;
-    color: var(--text);
-    font-size: 16px;
-    font-weight: 900;
-  }
-  .detail-date { font-size: 20px; font-weight: 950; }
-  .calendar-shell.detail-mode .calendar { display: block; width: 100%; }
-  .calendar-shell.detail-mode .day { width: 100%; min-width: 0; border: 0; border-radius: 0; }
-  .calendar-shell.detail-mode .day-header { display: none; }
-  .calendar-shell.detail-mode .hours { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 10px; }
-  .calendar-shell.detail-mode .hour { min-height: var(--slot-height); border-radius: 8px; }
-
-  @media (max-width: 760px) {
-    body { padding-bottom: 10px; }
-    .app { width: 100%; padding: 0 8px 16px; }
-    .topbar { position: sticky; top: 0; z-index: 50; padding: 8px 0 6px; background: var(--bg); }
-    .topbar-panel { padding: 8px 10px 10px !important; border-radius: 12px !important; }
-    .brand-row { min-height: 44px; padding-right: 146px; }
-    .brand::before { display: none !important; }
-    .brand-title { font-size: 23px !important; line-height: 1 !important; }
-    .current-user, .section-label, .swipe-guide, .legend, .save-note { display: none !important; }
-    .settings-btn { position: absolute; top: 8px; right: 8px; min-height: 42px !important; width: 82px; padding: 0 8px !important; font-size: 15px !important; border-width: 1px !important; }
-    .tools-toggle { position: absolute; top: 8px; right: 96px; width: 46px !important; min-height: 42px !important; margin: 0 !important; padding: 0 !important; font-size: 0 !important; border-width: 1px !important; }
-    .tools-toggle::before { content: "⋯"; font-size: 25px; line-height: 1; }
-    .tools-toggle-icon { display: none; }
-    .month-bar { grid-template-columns: 48px minmax(0, 1fr) 48px !important; gap: 6px !important; margin-top: 4px !important; }
-    .month-title { font-size: 22px !important; white-space: nowrap; }
-    .nav-btn { min-height: 44px !important; padding: 0 !important; font-size: 0 !important; border-width: 1px !important; }
-    #prevMonth::before { content: "‹"; font-size: 34px; }
-    #nextMonth::before { content: "›"; font-size: 34px; }
-    .more-tools { position: absolute; z-index: 80; top: 56px; right: 8px; left: 8px; padding: 10px !important; box-shadow: 0 10px 24px rgba(41,35,29,.18); }
-    .tool-help { display: none !important; }
-    .utility-row { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-    .utility-btn { min-height: 44px !important; font-size: 14px !important; padding: 6px !important; }
-    .zoom-value { display: grid; place-items: center; min-height: 44px; }
-    .calendar-shell { margin-top: 2px !important; border-radius: 12px !important; }
-    .calendar-shell.overview-mode { border: 0 !important; box-shadow: none !important; background: transparent !important; }
-    .calendar-shell.overview-mode .weekdays { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding: 0 0 5px; }
-    .calendar-shell.overview-mode .weekday { min-width: 0; padding: 4px 0; border: 0; background: transparent; font-size: 14px; }
-    .calendar-shell.overview-mode .calendar { gap: 4px; }
-    .day-overview { min-height: var(--overview-cell-height); padding: 5px 4px; border-radius: 7px; }
-    .overview-date { font-size: 15px; }
-    .day-shift-strip { gap: 2px; margin-top: 6px; }
-    .shift-mark { height: 3px; }
-    .footer-actions { display: none !important; }
-    body.view-month .brushes, body.view-month .status, body.view-month .undo-btn { display: none !important; }
-    body.view-detail .brand-row, body.view-detail .month-bar, body.view-detail .tools-toggle { display: none !important; }
-    body.view-detail .topbar { position: static; padding: 0; }
-    body.view-detail .topbar-panel { padding: 0 !important; border: 0 !important; background: transparent !important; box-shadow: none !important; }
-    body.view-detail .brushes {
-      position: fixed;
-      z-index: 100;
-      right: 6px !important;
-      bottom: max(6px, env(safe-area-inset-bottom));
-      left: 6px !important;
-      display: grid !important;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 4px !important;
-      padding: 5px !important;
-      border: 1px solid var(--border-strong);
-      border-radius: 12px;
-      background: rgba(255,253,249,.98);
-      box-shadow: 0 4px 18px rgba(41,35,29,.2);
-    }
-    body.view-detail .brush { min-width: 0; min-height: 48px !important; padding: 5px 2px !important; font-size: 13px !important; border-width: 1px !important; }
-    body.view-detail .status { position: fixed; z-index: 101; right: 18px; bottom: 68px; left: 18px; min-height: 0 !important; padding: 8px 12px !important; border: 0 !important; border-radius: 999px !important; background: #2f2a25 !important; color: #fff !important; font-size: 14px !important; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 4px 14px rgba(0,0,0,.18); }
-    body.view-detail .undo-btn { position: fixed; z-index: 102; right: 12px; bottom: 116px; width: auto; min-height: 42px; margin: 0; padding: 0 14px; font-size: 14px; }
-    body.view-detail #calendarShell { margin-bottom: 78px !important; }
-    .calendar-shell.detail-mode .hours { grid-template-columns: 1fr; padding: 8px; }
-    .calendar-shell.detail-mode .hour { min-height: 48px; font-size: 16px; }
-    .settings-page { padding: 8px !important; }
-    .settings-help:last-of-type { display: none; }
-  }
-</style>
 </head>
 <body>
   <main class="app">
@@ -1783,12 +1587,12 @@
           <div class="brand-row">
             <div class="brand">
               <h1 class="brand-title">交班月曆</h1>
-              <div id="currentUser" class="current-user">尚未設定人員</div>
+              <div id="currentUser" class="current-user">尚未設定姓名</div>
             </div>
-            <button id="openSettings" class="settings-btn" type="button">設定</button>
+            <button id="openSettings" class="settings-btn" type="button">姓名設定</button>
           </div>
 
-          <span class="section-label">選擇人員或功能 → 點一下／長按拖動時間</span>
+          <span class="section-label">選功能 → 點時間</span>
           <div class="brushes" role="group" aria-label="畫筆顏色">
             <button class="brush active" type="button" data-brush="blue" aria-pressed="true">藍</button>
             <button class="brush" type="button" data-brush="green" aria-pressed="false">綠</button>
@@ -1800,7 +1604,6 @@
           <div id="status" class="status" aria-live="polite">
             目前選擇：藍色
           </div>
-          <button id="undoLast" class="undo-btn hidden" type="button">復原上一步</button>
 
           <div class="month-bar">
             <button id="prevMonth" class="nav-btn" type="button">上個月</button>
@@ -1821,18 +1624,15 @@
 
           <div id="moreTools" class="more-tools hidden" aria-hidden="true">
             <div class="utility-row">
-              <button id="zoomOut" class="utility-btn" type="button" aria-label="縮小月曆">－</button>
+              <button id="zoomOut" class="utility-btn" type="button" aria-label="縮小月曆">縮小</button>
               <span id="zoomValue" class="zoom-value">100%</span>
-              <button id="zoomIn" class="utility-btn" type="button" aria-label="放大月曆">＋</button>
+              <button id="zoomIn" class="utility-btn" type="button" aria-label="放大月曆">放大</button>
               <button id="zoomReset" class="utility-btn" type="button">原大小</button>
               <button id="goToday" class="utility-btn" type="button">回到本月</button>
-              <button id="downloadBackup" class="utility-btn" type="button">下載 Excel 備份</button>
-              <button id="importBackup" class="utility-btn" type="button">匯入 Excel 備份</button>
-              <input id="backupFile" type="file" accept=".csv,text/csv" hidden />
             </div>
 
             <p class="tool-help">
-              每一條長格代表 1 小時。點一下可填一格；手機長按約半秒後拖動，可一次填滿連續時段。畫錯時可按「復原上一步」，或選「清除」後拖動擦除。
+              每一條長格代表 1 小時。先選功能，再點時間；要換色時，重新選顏色後再點一次。
             </p>
           </div>
         </div>
@@ -1842,10 +1642,6 @@
 
       <section id="calendarShell" class="calendar-shell" aria-label="整月交班月曆">
         <div class="calendar-stage">
-          <div id="detailHeader" class="detail-header">
-            <button id="backToMonth" class="detail-back" type="button">‹ 整月</button>
-            <div id="detailDate" class="detail-date"></div>
-          </div>
           <div class="weekdays" aria-hidden="true">
             <div class="weekday sun">日</div>
             <div class="weekday">一</div>
@@ -1860,9 +1656,9 @@
       </section>
 
       <div class="legend" aria-label="顏色說明">
-        <span class="legend-item"><span class="dot blue"></span><span id="legendBlue">藍色</span></span>
-        <span class="legend-item"><span class="dot green"></span><span id="legendGreen">綠色</span></span>
-        <span class="legend-item"><span class="dot yellow"></span><span id="legendYellow">黃色</span></span>
+        <span class="legend-item"><span class="dot blue"></span>藍色</span>
+        <span class="legend-item"><span class="dot green"></span>綠色</span>
+        <span class="legend-item"><span class="dot yellow"></span>黃色</span>
         <span class="legend-item"><span class="dot blocked"></span>不能排</span>
       </div>
 
@@ -1873,8 +1669,8 @@
       </div>
 
       <p class="save-note">
-        資料會保存在目前裝置的瀏覽器中。可在「更多工具」下載 Excel 備份，換裝置時再匯入。
-        不同手機目前不會自動同步；若要多人即時共用，下一版仍需要串接雲端資料庫。
+        資料會保存在目前裝置的瀏覽器中。不同手機不會自動同步；若要多人即時共用，
+        下一版需要串接雲端資料庫。
       </p>
     </section>
 
@@ -1885,33 +1681,17 @@
           <button id="closeSettings" class="back-btn" type="button">返回月曆</button>
         </div>
 
-        <p class="settings-help">輸入三位排班人員的名字。</p>
-
-        <div class="settings-people">
-          <div class="person-field">
-            <span class="person-swatch blue" aria-hidden="true"></span>
-            <div class="person-field-body">
-              <label class="field-label" for="blueName">藍色人員</label>
-              <input id="blueName" class="name-input" type="text" maxlength="12" placeholder="例如：小美" />
-            </div>
-          </div>
-          <div class="person-field">
-            <span class="person-swatch green" aria-hidden="true"></span>
-            <div class="person-field-body">
-              <label class="field-label" for="greenName">綠色人員</label>
-              <input id="greenName" class="name-input" type="text" maxlength="12" placeholder="例如：哥哥" />
-            </div>
-          </div>
-          <div class="person-field">
-            <span class="person-swatch yellow" aria-hidden="true"></span>
-            <div class="person-field-body">
-              <label class="field-label" for="yellowName">黃色人員</label>
-              <input id="yellowName" class="name-input" type="text" maxlength="12" placeholder="例如：照服員" />
-            </div>
-          </div>
-        </div>
+        <label class="field-label" for="personName">你的名字</label>
+        <input
+          id="personName"
+          class="name-input"
+          type="text"
+          maxlength="12"
+          autocomplete="name"
+          placeholder="例如：小美"
+        />
         <p class="settings-help">
-          姓名與排班會保存在這支手機。之後改名時，同一顏色的既有時段也會同步更新。
+          姓名會顯示在你填色的時段中。設定一次後，之後會保存在這支手機。
         </p>
 
         <div class="settings-actions">
@@ -1925,28 +1705,19 @@
     (() => {
       "use strict";
 
-      const now = new Date();
-      const YEAR = now.getFullYear();
-      const STORAGE_KEY = `care-calendar-${YEAR}-v2`;
-      const LEGACY_NAME_KEY = "care-calendar-name-v2";
-      const PEOPLE_KEY = "care-calendar-people-v3";
-      const SHEET_API_URL = "";
-      const SHEET_API_TOKEN = "41016d672415456a926603d5fd1dd2faa1c71b66dfad41549feb0094432f39d8";
-      const REMOTE_QUEUE_KEY = "care-calendar-remote-queue-v1";
-      const DEVICE_KEY = "care-calendar-device-v1";
-      const DEFAULT_PEOPLE = { blue: "人員一", green: "人員二", yellow: "人員三" };
+      const YEAR = 2026;
+      const STORAGE_KEY = "care-calendar-2026-v2";
+      const NAME_KEY = "care-calendar-name-v2";
 
-      let month = now.getMonth();
+      const now = new Date();
+      let month = now.getFullYear() === YEAR ? now.getMonth() : 0;
       let brush = "blue";
-      let scale = window.innerWidth <= 760 ? 1 : 1;
-      let viewMode = "month";
-      let selectedDay = now.getDate();
+      let scale = window.innerWidth <= 760 ? 0.88 : 1;
       let schedule = loadSchedule();
-      let people = loadPeople();
-      const undoStack = [];
 
       const homePage = document.getElementById("homePage");
       const settingsPage = document.getElementById("settingsPage");
+      const personName = document.getElementById("personName");
       const currentUser = document.getElementById("currentUser");
       const monthTitle = document.getElementById("monthTitle");
       const calendar = document.getElementById("calendar");
@@ -1955,13 +1726,9 @@
       const zoomValue = document.getElementById("zoomValue");
       const prevMonthButton = document.getElementById("prevMonth");
       const nextMonthButton = document.getElementById("nextMonth");
-      const undoButton = document.getElementById("undoLast");
-      const detailDate = document.getElementById("detailDate");
-      const nameInputs = {
-        blue: document.getElementById("blueName"),
-        green: document.getElementById("greenName"),
-        yellow: document.getElementById("yellowName")
-      };
+
+      personName.value = localStorage.getItem(NAME_KEY) || "";
+      updateCurrentUser();
 
       function loadSchedule() {
         try {
@@ -1981,168 +1748,16 @@
         }
       }
 
-      function loadPeople() {
-        try {
-          const raw = localStorage.getItem(PEOPLE_KEY);
-          if (raw) return { ...DEFAULT_PEOPLE, ...JSON.parse(raw) };
-        } catch (error) {
-          console.warn("無法讀取人員設定", error);
-        }
-        const legacyName = localStorage.getItem(LEGACY_NAME_KEY) || "";
-        return { ...DEFAULT_PEOPLE, blue: legacyName || DEFAULT_PEOPLE.blue };
-      }
-
-      function savePeople() {
-        localStorage.setItem(PEOPLE_KEY, JSON.stringify(people));
-      }
-
-      let remoteSending = false;
-
-      function cloudEnabled() {
-        return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(SHEET_API_URL);
-      }
-
-      function deviceId() {
-        let id = localStorage.getItem(DEVICE_KEY);
-        if (!id) {
-          id = `device-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-          localStorage.setItem(DEVICE_KEY, id);
-        }
-        return id;
-      }
-
-      function readRemoteQueue() {
-        try { return JSON.parse(localStorage.getItem(REMOTE_QUEUE_KEY) || "[]"); }
-        catch (_) { return []; }
-      }
-
-      function writeRemoteQueue(queue) {
-        localStorage.setItem(REMOTE_QUEUE_KEY, JSON.stringify(queue));
-      }
-
-      function slotForRemote(id) {
-        const entry = schedule[id];
-        if (!entry) return null;
-        const hour = Number(id.slice(-2));
-        return {
-          id,
-          date: id.slice(0, 10),
-          start: formatHour(hour),
-          end: formatHour(hour + 1),
-          name: entry.color === "blocked" ? "" : entry.name || colorLabel(entry.color),
-          color: entry.color,
-          note: ""
-        };
-      }
-
-      function queueSlotIds(ids) {
-        const uniqueIds = [...new Set(ids)];
-        if (!uniqueIds.length) return;
-        const upserts = uniqueIds.map(slotForRemote).filter(Boolean);
-        const deletes = uniqueIds.filter((id) => !schedule[id]);
-        enqueueRemote({ action: "applyChanges", upserts, deletes, updatedBy: deviceId() });
-      }
-
-      function queueSlotChanges(changes) {
-        queueSlotIds(Array.from(changes.keys()));
-      }
-
-      function queuePeopleUpdate() {
-        enqueueRemote({ action: "setPeople", people: { ...people }, updatedBy: deviceId() });
-      }
-
-      function enqueueRemote(payload) {
-        const queue = readRemoteQueue();
-        queue.push({ ...payload, queuedAt: new Date().toISOString() });
-        writeRemoteQueue(queue);
-        processRemoteQueue();
-      }
-
-      async function remoteRequest(payload) {
-        const response = await fetch(SHEET_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ ...payload, token: SHEET_API_TOKEN }),
-          redirect: "follow"
-        });
-        const data = JSON.parse(await response.text());
-        if (!response.ok || !data.ok) throw new Error(data.error || "Google Sheet 儲存失敗");
-        return data;
-      }
-
-      async function processRemoteQueue() {
-        if (!cloudEnabled() || remoteSending || !navigator.onLine) return;
-        const queue = readRemoteQueue();
-        if (!queue.length) return;
-        remoteSending = true;
-        try {
-          await remoteRequest(queue[0]);
-          queue.shift();
-          writeRemoteQueue(queue);
-          if (queue.length) window.setTimeout(processRemoteQueue, 150);
-        } catch (error) {
-          console.warn("雲端同步暫停", error);
-          status.textContent = "目前無法連上 Google Sheet，資料已保存在這支裝置，稍後會自動重試。";
-        } finally {
-          remoteSending = false;
-        }
-      }
-
-      async function loadRemoteState() {
-        if (!cloudEnabled()) return;
-        try {
-          const url = `${SHEET_API_URL}?action=state&token=${encodeURIComponent(SHEET_API_TOKEN)}&_=${Date.now()}`;
-          const response = await fetch(url, { method: "GET", cache: "no-store", redirect: "follow" });
-          const data = JSON.parse(await response.text());
-          if (!response.ok || !data.ok) throw new Error(data.error || "Google Sheet 讀取失敗");
-          const remoteSchedule = data.schedule || {};
-          const localIds = Object.keys(schedule);
-          const remoteIds = Object.keys(remoteSchedule);
-          if (!remoteIds.length && localIds.length) {
-            queueSlotIds(localIds);
-            queuePeopleUpdate();
-            status.textContent = "正在把這支裝置的既有排班上傳到 Google Sheet。";
-          } else {
-            schedule = remoteSchedule;
-            people = { ...DEFAULT_PEOPLE, ...(data.people || {}) };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
-            localStorage.setItem(PEOPLE_KEY, JSON.stringify(people));
-            updateBrushLabels();
-            updateCurrentUser();
-            render();
-            status.textContent = "已載入 Google Sheet 共用排班。";
-          }
-          processRemoteQueue();
-        } catch (error) {
-          console.warn("無法載入雲端排班", error);
-          status.textContent = "Google Sheet 暫時無法連線，目前先使用這支裝置內的資料。";
-        }
-      }
-      function updateBrushLabels() {
-        document.querySelectorAll(".brush").forEach((button) => {
-          const value = button.dataset.brush;
-          const label = value === "blocked" ? "不可" : value === "erase" ? "清除" : people[value];
-          button.textContent = label;
-          button.title = label;
-          button.setAttribute("aria-label", value === "blocked" ? "標記不能安排" : value === "erase" ? "清除時段" : `選擇${label}`);
-          if (people[value]) {
-            const legendId = `legend${value[0].toUpperCase()}${value.slice(1)}`;
-            const legend = document.getElementById(legendId);
-            if (legend) legend.textContent = people[value];
-          }
-        });
-      }
-
       function updateCurrentUser() {
-        const names = [...new Set(Object.values(people).filter(Boolean))];
-        currentUser.textContent = names.length ? `排班人員：${names.join("、")}` : "尚未設定人員";
+        const name = localStorage.getItem(NAME_KEY) || "";
+        currentUser.textContent = name ? `目前填寫人：${name}` : "尚未設定姓名";
       }
 
       function openSettings() {
-        Object.keys(nameInputs).forEach((color) => { nameInputs[color].value = people[color] || ""; });
+        personName.value = localStorage.getItem(NAME_KEY) || "";
         homePage.classList.add("hidden");
         settingsPage.classList.remove("hidden");
-        setTimeout(() => nameInputs.blue.focus(), 50);
+        setTimeout(() => personName.focus(), 50);
       }
 
       function closeSettings() {
@@ -2164,16 +1779,27 @@
         return `${dateKey(day)}-${String(hour).padStart(2, "0")}`;
       }
 
-      function formatHour(hour) {
-        return `${String(hour % 24).padStart(2, "0")}:00`;
+      function endHour(hour) {
+        return String((hour + 1) % 24).padStart(2, "0");
       }
 
-      function formatRange(hour) {
-        return `${formatHour(hour)}–${formatHour(hour + 1)}`;
+      function formatHour12(hour) {
+        const period = hour < 12 ? "AM" : "PM";
+        const displayHour = hour % 12 || 12;
+        return `${displayHour} ${period}`;
+      }
+
+      function formatRange12(hour) {
+        return `${formatHour12(hour)}–${formatHour12((hour + 1) % 24)}`;
       }
 
       function colorLabel(color) {
-        return color === "blocked" ? "不能排" : people[color] || color;
+        return {
+          blue: "藍色",
+          green: "綠色",
+          yellow: "黃色",
+          blocked: "不能排"
+        }[color] || color;
       }
 
       function render() {
@@ -2181,272 +1807,143 @@
         prevMonthButton.disabled = month === 0;
         nextMonthButton.disabled = month === 11;
         calendar.innerHTML = "";
-        document.body.classList.toggle("view-month", viewMode === "month");
-        document.body.classList.toggle("view-detail", viewMode === "detail");
-        calendarShell.classList.toggle("overview-mode", viewMode === "month");
-        calendarShell.classList.toggle("detail-mode", viewMode === "detail");
-        calendarShell.setAttribute("aria-label", viewMode === "month" ? "整月交班月曆" : `${month + 1}月${selectedDay}日排班`);
-        if (viewMode === "detail") {
-          selectedDay = Math.max(1, Math.min(monthDays(), selectedDay));
-          const weekday = ["日", "一", "二", "三", "四", "五", "六"][new Date(YEAR, month, selectedDay).getDay()];
-          detailDate.textContent = `${month + 1}月${selectedDay}日（${weekday}）`;
-          calendar.appendChild(createDay(selectedDay));
-          applyScale();
-          return;
-        }
+
         const firstWeekday = new Date(YEAR, month, 1).getDay();
         const totalDays = monthDays();
         const totalCells = Math.ceil((firstWeekday + totalDays) / 7) * 7;
+
         for (let index = 0; index < totalCells; index += 1) {
           const day = index - firstWeekday + 1;
+
           if (day < 1 || day > totalDays) {
             const empty = document.createElement("div");
-            empty.className = "day-overview empty";
+            empty.className = "day empty";
             empty.setAttribute("aria-hidden", "true");
             calendar.appendChild(empty);
             continue;
           }
-          calendar.appendChild(createMonthDay(day));
+
+          calendar.appendChild(createDay(day));
         }
+
         applyScale();
       }
 
-      function createMonthDay(day) {
-        const isToday = now.getFullYear() === YEAR && now.getMonth() === month && now.getDate() === day;
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `day-overview${isToday ? " today" : ""}`;
-        button.dataset.day = String(day);
-        const counts = { blue: 0, green: 0, yellow: 0, blocked: 0 };
-        const date = document.createElement("span");
-        date.className = "overview-date";
-        date.textContent = day;
-        const strip = document.createElement("span");
-        strip.className = "day-shift-strip";
-        for (let hour = 0; hour < 24; hour += 1) {
-          const entry = schedule[slotKey(day, hour)];
-          const mark = document.createElement("span");
-          mark.className = `shift-mark${entry ? ` ${entry.color}` : ""}`;
-          strip.appendChild(mark);
-          if (entry && counts[entry.color] !== undefined) counts[entry.color] += 1;
-        }
-        const summary = Object.entries(counts)
-          .filter(([, count]) => count)
-          .map(([color, count]) => `${colorLabel(color)}${count}小時`)
-          .join("、");
-        const colorSummary = document.createElement("span");
-        colorSummary.className = "day-color-summary";
-        Object.entries(counts).forEach(([color, count]) => {
-          if (!count) return;
-          const chip = document.createElement("span");
-          chip.className = `color-summary-chip ${color}`;
-          chip.textContent = `${colorLabel(color)} ${count}時`;
-          colorSummary.appendChild(chip);
-        });
-        button.setAttribute("aria-label", `${month + 1}月${day}日${summary ? `，${summary}` : "，尚未排班"}，點一下排時間`);
-        button.append(date, strip, colorSummary);
-        return button;
-      }
-
       function createDay(day) {
-        const isToday = now.getFullYear() === YEAR && now.getMonth() === month && now.getDate() === day;
+        const isToday =
+          now.getFullYear() === YEAR &&
+          now.getMonth() === month &&
+          now.getDate() === day;
+
         const dayElement = document.createElement("section");
         dayElement.className = `day${isToday ? " today" : ""}`;
         dayElement.setAttribute("aria-label", `${month + 1}月${day}日`);
+
         const header = document.createElement("div");
         header.className = "day-header";
+
         const number = document.createElement("span");
         number.className = "date-number";
         number.textContent = day;
+
         const count = document.createElement("span");
         count.className = "filled-count";
-        const filled = Array.from({ length: 24 }, (_, hour) => schedule[slotKey(day, hour)]).filter(Boolean).length;
+        const filled = Array.from({ length: 24 }, (_, hour) => schedule[slotKey(day, hour)])
+          .filter(Boolean).length;
         count.textContent = filled ? `${filled} 小時` : "";
+
         header.append(number, count);
+
         const hours = document.createElement("div");
         hours.className = "hours";
-        for (let hour = 0; hour < 24; hour += 1) hours.appendChild(createHourButton(day, hour));
+
+        for (let hour = 0; hour < 24; hour += 1) {
+          hours.appendChild(createHourButton(day, hour));
+        }
+
         dayElement.append(header, hours);
         return dayElement;
       }
 
       function createHourButton(day, hour) {
-        const value = schedule[slotKey(day, hour)];
+        const key = slotKey(day, hour);
+        const value = schedule[key];
+
         const button = document.createElement("button");
         button.type = "button";
         button.className = `hour${value ? ` ${value.color}` : ""}`;
-        button.dataset.day = String(day);
-        button.dataset.hour = String(hour);
+
         const time = document.createElement("span");
         time.className = "hour-time";
-        time.textContent = formatHour(hour);
+        time.textContent = formatHour12(hour);
+
         const name = document.createElement("span");
         name.className = "hour-name";
-        name.textContent = value ? (value.color === "blocked" ? "不可" : value.name || colorLabel(value.color)) : "";
+        name.textContent = value
+          ? value.color === "blocked"
+            ? "不可"
+            : value.name || ""
+          : "";
+
         button.append(time, name);
-        updateHourAria(button, day, hour, value);
+
+        const displayName =
+          value?.color === "blocked"
+            ? "，不能安排"
+            : value?.name
+              ? `，${value.name}`
+              : "";
+
+        button.setAttribute(
+          "aria-label",
+          `${month + 1}月${day}日 ${formatRange12(hour)}${displayName}`
+        );
+
+        button.addEventListener("click", () => paint(day, hour));
         return button;
       }
 
-      function updateHourAria(button, day, hour, value) {
-        const displayName = value?.color === "blocked" ? "，不能安排" : value?.name ? `，${value.name}` : "";
-        button.setAttribute("aria-label", `${month + 1}月${day}日 ${formatRange(hour)}${displayName}`);
-      }
-
-      function updateHourButton(button, value) {
-        button.classList.remove("blue", "green", "yellow", "blocked");
-        if (value) button.classList.add(value.color);
-        const name = button.querySelector(".hour-name");
-        if (name) name.textContent = value ? (value.color === "blocked" ? "不可" : value.name || colorLabel(value.color)) : "";
-        updateHourAria(button, Number(button.dataset.day), Number(button.dataset.hour), value);
-      }
-
-      function ensureBrushReady() {
-        if (brush === "erase" || brush === "blocked" || people[brush]) return true;
-        status.textContent = "請先到姓名設定輸入人員姓名。";
-        openSettings();
-        return false;
-      }
-
-      function applySlot(day, hour, changes, button) {
-        const key = slotKey(day, hour);
-        const before = schedule[key] ? { ...schedule[key] } : null;
-        const after = brush === "erase" ? null : { color: brush, name: brush === "blocked" ? "" : people[brush] };
-        if (JSON.stringify(before) === JSON.stringify(after)) return false;
-        if (!changes.has(key)) changes.set(key, before);
-        if (after) schedule[key] = after;
-        else delete schedule[key];
-        if (button) updateHourButton(button, after);
-        return true;
-      }
-
-      function pushUndo(changes) {
-        if (!changes.size) return;
-        undoStack.push(Array.from(changes, ([key, value]) => ({ key, value })));
-        if (undoStack.length > 20) undoStack.shift();
-        undoButton.classList.remove("hidden");
-      }
-
       function paint(day, hour) {
-        if (!ensureBrushReady()) return;
-        const changes = new Map();
-        if (!applySlot(day, hour, changes, null)) return;
-        pushUndo(changes);
-        saveSchedule();
-        queueSlotChanges(changes);
-        render();
-        status.textContent = brush === "erase"
-          ? `${month + 1}月${day}日 ${formatRange(hour)} 已清除。`
-          : `${month + 1}月${day}日 ${formatRange(hour)}｜${colorLabel(brush)}`;
-      }
+        const name = localStorage.getItem(NAME_KEY) || "";
+        const key = slotKey(day, hour);
 
-      function undoLastAction() {
-        const changes = undoStack.pop();
-        if (!changes) return;
-        changes.forEach(({ key, value }) => { if (value) schedule[key] = value; else delete schedule[key]; });
+        if (brush !== "erase" && brush !== "blocked" && !name) {
+          status.textContent = "請先到設定頁輸入自己的名字。";
+          openSettings();
+          return;
+        }
+
+        if (brush === "erase") {
+          delete schedule[key];
+          status.textContent =
+            `${month + 1}月${day}日 ${formatRange12(hour)} 已清除。`;
+        } else {
+          schedule[key] = {
+            color: brush,
+            name: brush === "blocked" ? "" : name
+          };
+
+          const who = brush === "blocked" ? "不能安排" : `${name}・${colorLabel(brush)}`;
+          status.textContent =
+            `${month + 1}月${day}日 ${formatRange12(hour)}｜${who}`;
+        }
+
         saveSchedule();
-        queueSlotIds(changes.map(({ key }) => key));
         render();
-        status.textContent = "已復原上一步。";
-        undoButton.classList.toggle("hidden", undoStack.length === 0);
       }
 
       function applyScale() {
         scale = Math.max(0.72, Math.min(1.55, scale));
-        const viewportWidth = Math.max(360, Math.min(760, window.innerWidth - 16));
-        const overviewZoom = scale >= 1.18 ? scale * 1.7 : 1;
-        const overviewWidth = Math.round(viewportWidth * overviewZoom);
         document.documentElement.style.setProperty("--day-width", `${Math.round(138 * scale)}px`);
         document.documentElement.style.setProperty("--slot-height", `${Math.round(34 * scale)}px`);
-        document.documentElement.style.setProperty("--overview-cell-height", `${Math.round(68 * scale)}px`);
-        document.documentElement.style.setProperty("--overview-width", `${overviewWidth}px`);
-        calendarShell.classList.toggle("zoomed-overview", viewMode === "month" && scale >= 1.18);
         zoomValue.textContent = `${Math.round(scale * 100)}%`;
       }
 
-      function csvCell(value) {
-        const text = String(value ?? "");
-        return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
-      }
-
-      function parseCsvLine(line) {
-        const result = [];
-        let value = "";
-        let quoted = false;
-        for (let index = 0; index < line.length; index += 1) {
-          const character = line[index];
-          if (character === '"') {
-            if (quoted && line[index + 1] === '"') { value += '"'; index += 1; }
-            else quoted = !quoted;
-          } else if (character === "," && !quoted) {
-            result.push(value);
-            value = "";
-          } else value += character;
-        }
-        result.push(value);
-        return result;
-      }
-
-      function downloadExcelBackup() {
-        const rows = [["日期", "開始時間", "結束時間", "人員", "狀態", "顏色"]];
-        Object.keys(schedule).sort().forEach((key) => {
-          const match = key.match(/^(\d{4}-\d{2}-\d{2})-(\d{2})$/);
-          if (!match) return;
-          const entry = schedule[key];
-          const hour = Number(match[2]);
-          rows.push([
-            match[1],
-            formatHour(hour),
-            formatHour(hour + 1),
-            entry.color === "blocked" ? "" : entry.name || colorLabel(entry.color),
-            entry.color === "blocked" ? "不能排" : "已排班",
-            entry.color
-          ]);
-        });
-        const csv = "\uFEFF" + rows.map((row) => row.map(csvCell).join(",")).join("\r\n");
-        const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `交班月曆-${YEAR}-全年.csv`;
-        link.click();
-        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-        status.textContent = "Excel 備份已下載，請保存到 OneDrive。";
-      }
-
-      async function importExcelBackup(file) {
-        const text = (await file.text()).replace(/^\uFEFF/, "");
-        const lines = text.split(/\r?\n/).filter(Boolean);
-        if (lines.length < 2) throw new Error("備份檔沒有排班資料");
-        const changes = new Map();
-        let imported = 0;
-        lines.slice(1).forEach((line) => {
-          const [date, start, , name, state, color] = parseCsvLine(line);
-          if (!date?.startsWith(`${YEAR}-`)) return;
-          const hour = Number(start?.slice(0, 2));
-          const safeColor = state === "不能排" ? "blocked" : color;
-          if (!Number.isInteger(hour) || hour < 0 || hour > 23 || !["blue", "green", "yellow", "blocked"].includes(safeColor)) return;
-          const key = `${date}-${String(hour).padStart(2, "0")}`;
-          if (!changes.has(key)) changes.set(key, schedule[key] ? { ...schedule[key] } : null);
-          schedule[key] = { color: safeColor, name: safeColor === "blocked" ? "" : name || people[safeColor] };
-          imported += 1;
-        });
-        if (!imported) throw new Error(`找不到 ${YEAR} 年可匯入的時段`);
-        pushUndo(changes);
-        saveSchedule();
-        queueSlotChanges(changes);
-        render();
-        status.textContent = `已從 Excel 備份匯入 ${imported} 個小時，可復原上一步。`;
-      }
       function clearByPrefix(prefix) {
-        const changes = new Map();
         Object.keys(schedule).forEach((key) => {
-          if (!key.startsWith(prefix)) return;
-          changes.set(key, { ...schedule[key] });
-          delete schedule[key];
+          if (key.startsWith(prefix)) delete schedule[key];
         });
-        pushUndo(changes);
         saveSchedule();
-        queueSlotChanges(changes);
         render();
       }
 
@@ -2459,229 +1956,149 @@
           });
           button.classList.add("active");
           button.setAttribute("aria-pressed", "true");
-          status.textContent = brush === "erase"
-            ? "已選清除：點一下或長按拖動可擦除時段。"
-            : brush === "blocked"
-              ? "已選不能排：點一下或長按拖動可連續標記。"
-              : `已選${colorLabel(brush)}：點一下或長按拖動時間。`;
+
+          status.textContent =
+            brush === "erase"
+              ? "已選橡皮擦，點已上色的小時格即可清除。"
+              : brush === "blocked"
+                ? "已選「不能排」，點小時格即可標記。"
+                : `已選${colorLabel(brush)}畫筆。`;
         });
       });
 
       document.getElementById("openSettings").addEventListener("click", openSettings);
       document.getElementById("closeSettings").addEventListener("click", closeSettings);
-      undoButton.addEventListener("click", undoLastAction);
 
       document.getElementById("saveSettings").addEventListener("click", () => {
-        people = {
-          blue: nameInputs.blue.value.trim() || DEFAULT_PEOPLE.blue,
-          green: nameInputs.green.value.trim() || DEFAULT_PEOPLE.green,
-          yellow: nameInputs.yellow.value.trim() || DEFAULT_PEOPLE.yellow
-        };
-        savePeople();
+        const name = personName.value.trim();
+        if (!name) {
+          personName.focus();
+          personName.placeholder = "請輸入名字";
+          return;
+        }
+
+        const previousName = localStorage.getItem(NAME_KEY) || "";
+
+        localStorage.setItem(NAME_KEY, name);
+
         Object.keys(schedule).forEach((key) => {
           const entry = schedule[key];
-          if (entry && entry.color !== "blocked" && people[entry.color]) entry.name = people[entry.color];
+          if (!entry || entry.color === "blocked") return;
+
+          if (!previousName || entry.name === previousName) {
+            entry.name = name;
+          }
         });
-        localStorage.removeItem(LEGACY_NAME_KEY);
+
         saveSchedule();
-        queuePeopleUpdate();
-        updateBrushLabels();
         updateCurrentUser();
         render();
         closeSettings();
-        status.textContent = "名字已更新";
+        status.textContent = `已更新填寫人：${name}，既有時段名稱也已同步更換。`;
       });
 
       document.getElementById("prevMonth").addEventListener("click", () => {
-        if (month > 0) { month -= 1; viewMode = "month"; render(); calendarShell.scrollTo({ left: 0, behavior: "smooth" }); }
+        if (month > 0) {
+          month -= 1;
+          render();
+          calendarShell.scrollTo({ left: 0, behavior: "smooth" });
+        }
       });
+
       document.getElementById("nextMonth").addEventListener("click", () => {
-        if (month < 11) { month += 1; viewMode = "month"; render(); calendarShell.scrollTo({ left: 0, behavior: "smooth" }); }
+        if (month < 11) {
+          month += 1;
+          render();
+          calendarShell.scrollTo({ left: 0, behavior: "smooth" });
+        }
       });
-      document.getElementById("goToday").addEventListener("click", () => { month = now.getMonth(); selectedDay = now.getDate(); viewMode = "month"; render(); });
-      document.getElementById("zoomIn").addEventListener("click", () => { scale += 0.1; applyScale(); });
-      document.getElementById("zoomOut").addEventListener("click", () => { scale -= 0.1; applyScale(); });
-      document.getElementById("zoomReset").addEventListener("click", () => { scale = 1; applyScale(); });
-      document.getElementById("backToMonth").addEventListener("click", () => {
-        viewMode = "month";
+
+      document.getElementById("goToday").addEventListener("click", () => {
+        month = now.getFullYear() === YEAR ? now.getMonth() : 0;
         render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      document.getElementById("zoomIn").addEventListener("click", () => {
+        scale += 0.1;
+        applyScale();
+      });
+
+      document.getElementById("zoomOut").addEventListener("click", () => {
+        scale -= 0.1;
+        applyScale();
+      });
+
+      document.getElementById("zoomReset").addEventListener("click", () => {
+        scale = window.innerWidth <= 760 ? 0.88 : 1;
+        applyScale();
       });
 
       document.getElementById("clearMonth").addEventListener("click", () => {
         const ok = window.confirm(`確定清除 ${YEAR} 年 ${month + 1} 月的全部排班嗎？`);
         if (!ok) return;
         clearByPrefix(`${YEAR}-${String(month + 1).padStart(2, "0")}`);
-        status.textContent = `${month + 1}月已清除，可按「復原上一步」救回。`;
+        status.textContent = `${month + 1}月已清除。`;
       });
+
       document.getElementById("clearAll").addEventListener("click", () => {
-        const ok = window.confirm(`確定清除 ${YEAR} 年的全部排班嗎？`);
+        const ok = window.confirm(`確定清除 ${YEAR} 年的全部排班嗎？此動作無法復原。`);
         if (!ok) return;
-        const changes = new Map(Object.keys(schedule).map((key) => [key, { ...schedule[key] }]));
         schedule = {};
-        pushUndo(changes);
         saveSchedule();
-        queueSlotChanges(changes);
         render();
-        status.textContent = "全年排班已清除，可按「復原上一步」救回。";
-      });
-      document.getElementById("printPage").addEventListener("click", () => window.print());
-      document.getElementById("downloadBackup").addEventListener("click", downloadExcelBackup);
-      document.getElementById("importBackup").addEventListener("click", () => document.getElementById("backupFile").click());
-      document.getElementById("backupFile").addEventListener("change", async (event) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-        try { await importExcelBackup(file); }
-        catch (error) { status.textContent = `匯入失敗：${error.message}`; }
-        event.target.value = "";
+        status.textContent = "全年排班已清除。";
       });
 
-      let strokeChanges = null;
-      let strokeVisited = null;
-      let mousePainting = false;
-      let touchPainting = false;
-      let touchTimer = 0;
-      let touchStartX = 0;
-      let touchStartY = 0;
-      let suppressClickUntil = 0;
-
-      function beginStroke(button) {
-        if (!ensureBrushReady()) return false;
-        strokeChanges = new Map();
-        strokeVisited = new Set();
-        calendarShell.classList.add("is-painting");
-        continueStrokeOn(button);
-        return true;
-      }
-      function continueStrokeOn(button) {
-        if (!button || !strokeChanges || strokeVisited.has(button)) return;
-        strokeVisited.add(button);
-        applySlot(Number(button.dataset.day), Number(button.dataset.hour), strokeChanges, button);
-      }
-      function continueStrokeAt(x, y) {
-        const element = document.elementFromPoint(x, y);
-        const button = element?.closest?.(".hour");
-        if (button && calendarShell.contains(button)) continueStrokeOn(button);
-      }
-      function finishStroke() {
-        calendarShell.classList.remove("is-painting");
-        const count = strokeChanges?.size || 0;
-        if (count) {
-          pushUndo(strokeChanges);
-          saveSchedule();
-          queueSlotChanges(strokeChanges);
-          render();
-          status.textContent = brush === "erase"
-            ? `已連續清除 ${count} 個小時，可復原上一步。`
-            : `已替${colorLabel(brush)}連續填寫 ${count} 個小時，可復原上一步。`;
-        }
-        strokeChanges = null;
-        strokeVisited = null;
-        mousePainting = false;
-        touchPainting = false;
-        suppressClickUntil = Date.now() + 500;
-      }
-
-      calendarShell.addEventListener("click", (event) => {
-        if (Date.now() < suppressClickUntil) return;
-        const overviewDay = event.target.closest(".day-overview[data-day]");
-        if (overviewDay) {
-          selectedDay = Number(overviewDay.dataset.day);
-          viewMode = "detail";
-          render();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          return;
-        }
-        const button = event.target.closest(".hour");
-        if (button) paint(Number(button.dataset.day), Number(button.dataset.hour));
+      document.getElementById("printPage").addEventListener("click", () => {
+        window.print();
       });
-      calendarShell.addEventListener("mousedown", (event) => {
-        if (event.button !== 0) return;
-        const button = event.target.closest(".hour");
-        if (!button) return;
-        event.preventDefault();
-        mousePainting = beginStroke(button);
-      });
-      document.addEventListener("mousemove", (event) => {
-        if (!mousePainting) return;
-        event.preventDefault();
-        continueStrokeAt(event.clientX, event.clientY);
-      });
-      document.addEventListener("mouseup", () => { if (mousePainting) finishStroke(); });
-
-      calendarShell.addEventListener("touchstart", (event) => {
-        if (event.touches.length !== 1) return;
-        const button = event.target.closest(".hour");
-        if (!button) return;
-        const touch = event.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-        clearTimeout(touchTimer);
-        touchTimer = window.setTimeout(() => {
-          touchPainting = beginStroke(button);
-          if (touchPainting && navigator.vibrate) navigator.vibrate(25);
-        }, 380);
-      }, { passive: true });
-      calendarShell.addEventListener("touchmove", (event) => {
-        if (event.touches.length !== 1) return;
-        const touch = event.touches[0];
-        if (!touchPainting) {
-          const moved = Math.hypot(touch.clientX - touchStartX, touch.clientY - touchStartY);
-          if (moved > 10) clearTimeout(touchTimer);
-          return;
-        }
-        event.preventDefault();
-        continueStrokeAt(touch.clientX, touch.clientY);
-      }, { passive: false });
-      calendarShell.addEventListener("touchend", () => { clearTimeout(touchTimer); if (touchPainting) finishStroke(); });
-      calendarShell.addEventListener("touchcancel", () => { clearTimeout(touchTimer); if (touchPainting) finishStroke(); });
 
       let pinchStartDistance = 0;
       let pinchStartScale = scale;
-      calendarShell.addEventListener("touchstart", (event) => {
-        if (event.touches.length !== 2) return;
-        clearTimeout(touchTimer);
-        const [a, b] = event.touches;
-        pinchStartDistance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-        pinchStartScale = scale;
-      }, { passive: true });
-      calendarShell.addEventListener("touchmove", (event) => {
-        if (event.touches.length !== 2 || !pinchStartDistance) return;
-        event.preventDefault();
-        const [a, b] = event.touches;
-        const distance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-        scale = pinchStartScale * (distance / pinchStartDistance);
-        applyScale();
-      }, { passive: false });
-      calendarShell.addEventListener("touchend", (event) => {
-        if (event.touches.length < 2 && pinchStartDistance) {
-          pinchStartDistance = 0;
-          suppressClickUntil = Date.now() + 350;
-        }
-      }, { passive: true });
+
+      calendarShell.addEventListener(
+        "touchstart",
+        (event) => {
+          if (event.touches.length !== 2) return;
+          const [a, b] = event.touches;
+          pinchStartDistance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+          pinchStartScale = scale;
+        },
+        { passive: true }
+      );
+
+      calendarShell.addEventListener(
+        "touchmove",
+        (event) => {
+          if (event.touches.length !== 2 || !pinchStartDistance) return;
+          const [a, b] = event.touches;
+          const distance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+          scale = pinchStartScale * (distance / pinchStartDistance);
+          applyScale();
+        },
+        { passive: true }
+      );
+
 
       const toolsToggle = document.getElementById("toolsToggle");
       const moreTools = document.getElementById("moreTools");
+
       toolsToggle.addEventListener("click", () => {
         const isOpen = toolsToggle.getAttribute("aria-expanded") === "true";
         const nextOpen = !isOpen;
+
         toolsToggle.setAttribute("aria-expanded", String(nextOpen));
         moreTools.setAttribute("aria-hidden", String(!nextOpen));
         moreTools.classList.toggle("hidden", !nextOpen);
+
         const icon = toolsToggle.querySelector(".tools-toggle-icon");
         if (icon) icon.textContent = nextOpen ? "－" : "＋";
       });
 
-      updateBrushLabels();
-      updateCurrentUser();
       render();
-      status.textContent = cloudEnabled()
-        ? "正在連線 Google Sheet…"
-        : `目前選擇：${colorLabel(brush)}。點一下或長按拖動時間。`;
-      if (cloudEnabled()) {
-        loadRemoteState();
-        window.addEventListener("online", processRemoteQueue);
-        window.setInterval(processRemoteQueue, 15000);
+
+      if (!localStorage.getItem(NAME_KEY)) {
+        openSettings();
       }
     })();
   </script>
