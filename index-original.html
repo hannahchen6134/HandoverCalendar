@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#eee7dc" />
+  <title>2026 交班月曆</title>
+  <style>
+    :root {
+      --bg: #eee8df;
+      --panel: #fbf8f2;
+      --panel-2: #f5efe6;
+      --panel-3: #e8ded2;
+      --text: #312c28;
+      --muted: #776e65;
+      --border: #d5c9bc;
+      --border-strong: #c3b4a5;
+      --accent: #78685b;
+      --accent-dark: #55483e;
+      --accent-soft: #e7ddd2;
+      --blue: #5f84ad;
+      --green: #668b72;
+      --yellow: #d8b960;
+      --blocked: #77706a;
+      --danger: #9b5a52;
+      --day-width: 190px;
+      --slot-height: 38px;
+      --radius: 20px;
+      --shadow: 0 12px 32px rgba(74, 59, 46, .08);
+      --shadow-soft: 0 4px 14px rgba(74, 59, 46, .06);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      color-scheme: light;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.72), transparent 30%),
+        linear-gradient(180deg, #f4efe8 0%, var(--bg) 46%, #e8e0d7 100%);
+      color: var(--text);
+      font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+        "PingFang TC", "Microsoft JhengHei", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, input { font: inherit; }
+
+    button {
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .hidden { display: none !important; }
+
+    .app {
+      width: min(100%, 1500px);
+      margin: 0 auto;
+      padding: 14px 14px 42px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding: 8px 0 12px;
+      background: linear-gradient(var(--bg) 84%, rgba(238,232,223,0));
+      backdrop-filter: blur(12px);
+    }
+
+    .panel {
+      background: rgba(251,248,242,.96);
+      border: 1px solid rgba(213,201,188,.94);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .topbar-panel {
+      padding: 16px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .brand::before {
+      content: "2026";
+      display: inline-block;
+      margin-bottom: 5px;
+      color: var(--accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      letter-spacing: .2em;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", "Noto Serif TC", serif;
+      font-size: clamp(26px, 5vw, 38px);
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+
+    .current-user {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      margin-top: 8px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .settings-btn,
+    .nav-btn,
+    .utility-btn,
+    .save-btn,
+    .back-btn {
+      min-height: 46px;
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fcfaf6, #eee6dc);
+      color: var(--text);
+      padding: 10px 15px;
+      font-weight: 800;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .settings-btn {
+      min-width: 84px;
+      white-space: nowrap;
+    }
+
+    .section-label {
+      display: block;
+      margin: 16px 0 9px;
+      color: var(--accent-dark);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .09em;
+    }
+
+    .brushes {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .brush {
+      min-height: 60px;
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 9px 8px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 900;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+    }
+
+    .brush::before {
+      content: "";
+      display: block;
+      width: 21px;
+      height: 21px;
+      margin: 0 auto 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.12);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.32);
+    }
+
+    .brush[data-brush="blue"]::before { background: var(--blue); }
+    .brush[data-brush="green"]::before { background: var(--green); }
+    .brush[data-brush="yellow"]::before { background: var(--yellow); }
+
+    .brush[data-brush="blocked"]::before {
+      background:
+        repeating-linear-gradient(
+          135deg,
+          #69645f 0,
+          #69645f 5px,
+          #918b84 5px,
+          #918b84 10px
+        );
+    }
+
+    .brush[data-brush="erase"]::before {
+      border-radius: 5px;
+      background: linear-gradient(135deg, #fffdf9 0 50%, #d3c8bc 50% 100%);
+    }
+
+    .brush.active {
+      border: 2px solid var(--accent-dark);
+      background: #fffdf9;
+      box-shadow:
+        0 0 0 4px rgba(120,104,91,.13),
+        var(--shadow-soft);
+      transform: translateY(-1px);
+    }
+
+    .brush:active,
+    .settings-btn:active,
+    .nav-btn:active,
+    .utility-btn:active,
+    .save-btn:active,
+    .back-btn:active {
+      transform: scale(.98);
+    }
+
+    .status {
+      margin-top: 12px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 10px 13px;
+      border: 1px solid #d8cdc2;
+      border-radius: 14px;
+      background: #eee5db;
+      color: var(--accent-dark);
+      font-size: 14px;
+      font-weight: 760;
+      line-height: 1.5;
+    }
+
+    .month-bar {
+      display: grid;
+      grid-template-columns: auto minmax(160px, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .month-title {
+      text-align: center;
+      color: var(--accent-dark);
+      font-family: Georgia, "Times New Roman", "Noto Serif TC", serif;
+      font-size: clamp(23px, 5vw, 32px);
+      font-weight: 700;
+      letter-spacing: .05em;
+    }
+
+    .utility-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .zoom-value {
+      min-width: 58px;
+      text-align: center;
+      color: var(--accent-dark);
+      font-weight: 900;
+    }
+
+    .hint {
+      margin: 13px 4px 9px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.72;
+    }
+
+    .calendar-shell {
+      width: 100%;
+      overflow: auto;
+      overscroll-behavior: contain;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(251,248,242,.97);
+      box-shadow: var(--shadow);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .calendar-stage {
+      width: max-content;
+      min-width: 100%;
+      padding: 12px;
+    }
+
+    .weekdays,
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, var(--day-width));
+      gap: 8px;
+    }
+
+    .weekdays {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      padding-bottom: 8px;
+      background: rgba(251,248,242,.98);
+    }
+
+    .weekday {
+      padding: 10px 4px;
+      border: 1px solid #ddd2c7;
+      border-radius: 12px;
+      background: #eee5db;
+      text-align: center;
+      color: var(--accent-dark);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .09em;
+    }
+
+    .weekday.sun { color: #995b55; }
+    .weekday.sat { color: #506f91; }
+
+    .day {
+      min-height: 0;
+      height: max-content;
+      align-self: start;
+      border: 1px solid #ddd2c7;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #faf6f0, #f1e8de);
+      padding: 9px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+    }
+
+    .day.empty {
+      min-height: 0;
+      height: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .day.today {
+      border: 2px solid var(--accent);
+      box-shadow:
+        0 0 0 3px rgba(120,104,91,.12),
+        inset 0 1px 0 rgba(255,255,255,.8);
+      padding: 8px;
+    }
+
+    .day-header {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+
+    .date-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      color: var(--accent-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .today .date-number {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .filled-count {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .hours {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .hour {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      height: var(--slot-height);
+      border: 1px solid #cfc3b6;
+      border-radius: 9px;
+      background: #fbf7f1;
+      color: #433b34;
+      padding: 0 9px;
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      align-items: center;
+      gap: 7px;
+      overflow: hidden;
+      user-select: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.82);
+      text-align: left;
+    }
+
+    .hour-time {
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+      letter-spacing: .01em;
+    }
+
+    .hour-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .hour.blue {
+      background: linear-gradient(180deg, #6e94bc, var(--blue));
+      border-color: #496e96;
+      color: #fff;
+    }
+
+    .hour.green {
+      background: linear-gradient(180deg, #789d84, var(--green));
+      border-color: #4f725c;
+      color: #fff;
+    }
+
+    .hour.yellow {
+      background: linear-gradient(180deg, #e4ca74, var(--yellow));
+      border-color: #b69a4d;
+      color: #2f2a24;
+    }
+
+    .hour.blocked {
+      background:
+        repeating-linear-gradient(
+          135deg,
+          #69645f 0,
+          #69645f 7px,
+          #8a837c 7px,
+          #8a837c 14px
+        );
+      border-color: #56514c;
+      color: #fff;
+    }
+
+    .hour:focus-visible {
+      outline: 3px solid #2b2723;
+      outline-offset: 1px;
+      z-index: 2;
+    }
+
+    .hour:active {
+      transform: scale(.97);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin-top: 11px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(251,248,242,.78);
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.15);
+    }
+
+    .dot.blue { background: var(--blue); }
+    .dot.green { background: var(--green); }
+    .dot.yellow { background: var(--yellow); }
+    .dot.blocked { background: var(--blocked); }
+
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .danger { color: var(--danger); }
+
+    .save-note {
+      margin-top: 11px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .settings-page {
+      width: min(100%, 620px);
+      margin: 0 auto;
+      padding-top: 16px;
+    }
+
+    .settings-card {
+      padding: 22px;
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .settings-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", "Noto Serif TC", serif;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--accent-dark);
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .name-input {
+      width: 100%;
+      min-height: 56px;
+      padding: 13px 15px;
+      border: 1px solid var(--border-strong);
+      border-radius: 15px;
+      background: #fffdf9;
+      color: var(--text);
+      font-size: 19px;
+      outline: none;
+      box-shadow: inset 0 1px 2px rgba(75,62,49,.04);
+    }
+
+    .name-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(120,104,91,.14);
+    }
+
+    .settings-help {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .settings-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .save-btn {
+      background: linear-gradient(180deg, #8a7869, var(--accent));
+      color: #fff;
+      border-color: var(--accent);
+      min-height: 56px;
+      font-size: 17px;
+    }
+
+    .back-btn {
+      min-height: 50px;
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --day-width: 176px;
+        --slot-height: 40px;
+      }
+
+      .app {
+        padding: 8px 8px 32px;
+      }
+
+      .topbar {
+        padding-top: 4px;
+      }
+
+      .topbar-panel {
+        padding: 12px;
+      }
+
+      .brand-title {
+        font-size: 25px;
+      }
+
+      .settings-btn {
+        min-width: 78px;
+        padding-inline: 11px;
+      }
+
+      .brushes {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .brush[data-brush="erase"] {
+        grid-column: 1 / -1;
+      }
+
+      .brush {
+        min-height: 62px;
+        font-size: 15px;
+      }
+
+      .month-bar {
+        grid-template-columns: 76px minmax(0, 1fr) 76px;
+        gap: 6px;
+      }
+
+      .nav-btn {
+        min-height: 48px;
+        padding-inline: 7px;
+        font-size: 15px;
+      }
+
+      .status {
+        font-size: 14px;
+      }
+
+      .utility-btn {
+        min-height: 46px;
+      }
+
+      .calendar-stage {
+        padding: 8px;
+      }
+
+      .calendar-shell {
+        border-radius: 15px;
+      }
+
+      .hour {
+        grid-template-columns: 60px minmax(0, 1fr);
+        padding-inline: 9px;
+      }
+
+      .hour-time {
+        font-size: 12px;
+      }
+
+      .hour-name {
+        font-size: 11px;
+      }
+
+      .settings-page {
+        padding-top: 8px;
+      }
+
+      .settings-card {
+        padding: 17px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .brand-title { font-size: 23px; }
+      .current-user { font-size: 12px; }
+
+      .brush {
+        min-height: 60px;
+        font-size: 14px;
+      }
+
+      .utility-row {
+        gap: 6px;
+      }
+
+      .utility-btn {
+        padding-inline: 10px;
+      }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .topbar, .hint, .footer-actions, .save-note, .legend { display: none !important; }
+      .app { width: 100%; padding: 0; }
+      .calendar-shell { overflow: visible; box-shadow: none; border: 0; }
+      .calendar-stage { transform: scale(.48); transform-origin: top left; }
+    }
+  </style>
+
+<style id="senior-friendly-overrides">
+  :root {
+    --bg: #f3ede4;
+    --panel: #fffaf3;
+    --panel-2: #f8f1e7;
+    --panel-3: #ece2d5;
+    --text: #2f2a25;
+    --muted: #625a52;
+    --border: #cdbfae;
+    --border-strong: #aa9987;
+    --accent: #6d5f52;
+    --accent-dark: #40372f;
+    --blue: #4f7fb6;
+    --green: #4f8a68;
+    --yellow: #e0bb4f;
+    --blocked: #6f6a65;
+    --day-width: 188px;
+    --slot-height: 42px;
+    --radius: 14px;
+    --shadow: none;
+    --shadow-soft: none;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .app {
+    width: min(100%, 1480px);
+    padding: 20px 22px 44px;
+  }
+
+  .panel,
+  .calendar-shell,
+  .day,
+  .settings-card {
+    box-shadow: none;
+  }
+
+  .topbar {
+    padding: 6px 0 12px;
+    backdrop-filter: none;
+    background: linear-gradient(var(--bg) 92%, rgba(243,237,228,0));
+  }
+
+  .topbar-panel {
+    padding: 18px;
+  }
+
+  .brand::before {
+    margin-bottom: 2px;
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: .08em;
+  }
+
+  .brand-title,
+  .month-title,
+  .settings-title {
+    font-family: inherit;
+    letter-spacing: .02em;
+  }
+
+  .brand-title {
+    font-size: clamp(24px, 5vw, 32px);
+    font-weight: 800;
+  }
+
+  .current-user {
+    min-height: 32px;
+    margin-top: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .settings-btn,
+  .nav-btn,
+  .utility-btn,
+  .save-btn,
+  .back-btn {
+    min-height: 48px;
+    border: 2px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--text);
+    box-shadow: none;
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .section-label {
+    margin: 14px 0 8px;
+    font-size: 17px;
+    letter-spacing: 0;
+  }
+
+  .brushes {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  .brush {
+    min-width: 0;
+    min-height: 64px !important;
+    padding: 7px 2px !important;
+    border: 2px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--text);
+    box-shadow: none;
+    font-size: 16px !important;
+    font-weight: 900;
+    line-height: 1.05;
+  }
+
+  .brush::before {
+    width: 22px !important;
+    height: 22px !important;
+    margin: 0 auto 5px !important;
+    border: 2px solid rgba(0,0,0,.18);
+    box-shadow: none;
+  }
+
+  .brush[data-brush="erase"] {
+    grid-column: auto !important;
+  }
+
+  .brush.active {
+    border: 3px solid #171411;
+    background: #fff;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .status {
+    min-height: 50px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-3);
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  .month-bar {
+    margin-top: 12px;
+  }
+
+  .month-title {
+    font-size: clamp(22px, 5vw, 28px);
+    font-weight: 800;
+  }
+
+  .utility-row {
+    gap: 7px;
+  }
+
+  .utility-btn {
+    padding: 9px 11px;
+    font-size: 15px;
+  }
+
+  .zoom-value {
+    font-size: 16px;
+  }
+
+  .hint {
+    margin: 12px 6px 10px;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  .calendar-shell {
+    width: calc(100% - 4px);
+    margin-inline: 2px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel);
+  }
+
+  .calendar-stage {
+    padding: 12px;
+  }
+
+  .weekdays,
+  .calendar {
+    gap: 7px;
+  }
+
+  .weekday {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel-3);
+    font-size: 16px;
+    letter-spacing: 0;
+  }
+
+  .day {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-2);
+    padding: 9px;
+  }
+
+  .day.today {
+    border: 3px solid var(--accent-dark);
+    box-shadow: none;
+  }
+
+  .date-number {
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 900;
+  }
+
+  .filled-count {
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .hours {
+    gap: 5px;
+  }
+
+  .hour {
+    height: var(--slot-height);
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 6px;
+    padding: 0 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: #fffaf3;
+    box-shadow: none;
+  }
+
+  .hour-time {
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  .hour-name {
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .hour.blue,
+  .hour.green,
+  .hour.yellow {
+    background-image: none;
+  }
+
+  .legend {
+    margin: 12px 6px 0;
+  }
+
+  .legend-item {
+    border-radius: 8px;
+    background: var(--panel);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .footer-actions {
+    margin: 14px 6px 0;
+  }
+
+  .save-note {
+    margin: 12px 6px 0;
+    font-size: 14px;
+  }
+
+  .settings-page {
+    padding: 18px 4px 0;
+  }
+
+  .settings-card {
+    padding: 22px;
+  }
+
+  .name-input {
+    min-height: 58px;
+    border: 2px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--panel);
+    font-size: 20px;
+  }
+
+  @media (max-width: 760px) {
+    :root {
+      --day-width: 176px;
+      --slot-height: 44px;
+    }
+
+    .app {
+      padding: 14px 14px 34px !important;
+    }
+
+    .topbar {
+      padding-top: 2px;
+    }
+
+    .topbar-panel {
+      padding: 15px !important;
+    }
+
+    .brand-title {
+      font-size: 24px;
+    }
+
+    .settings-btn {
+      min-width: 76px;
+      padding-inline: 10px;
+    }
+
+    .brushes {
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 5px !important;
+    }
+
+    .brush {
+      min-height: 62px !important;
+      padding: 6px 1px !important;
+      font-size: 15px !important;
+    }
+
+    .brush::before {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    .month-bar {
+      grid-template-columns: 76px minmax(0, 1fr) 76px;
+      gap: 7px;
+    }
+
+    .nav-btn {
+      padding-inline: 6px;
+      font-size: 15px;
+    }
+
+    .status {
+      font-size: 15px;
+    }
+
+    .calendar-shell {
+      width: 100%;
+      margin-inline: 0;
+    }
+
+    .calendar-stage {
+      padding: 10px;
+    }
+
+    .settings-page {
+      padding-inline: 2px;
+    }
+
+    .settings-card {
+      padding: 18px;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .app {
+      padding-inline: 12px !important;
+    }
+
+    .topbar-panel {
+      padding: 13px !important;
+    }
+
+    .brushes {
+      gap: 4px !important;
+    }
+
+    .brush {
+      min-height: 60px !important;
+      font-size: 14px !important;
+    }
+
+    .brush::before {
+      width: 18px !important;
+      height: 18px !important;
+    }
+
+    .settings-btn {
+      min-width: 70px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+
+<style id="elderly-ux-v9">
+  .swipe-guide {
+    margin: 0 8px 10px;
+    padding: 10px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--text);
+    text-align: center;
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  .nav-btn:disabled,
+  .utility-btn:disabled {
+    cursor: not-allowed;
+    opacity: .38;
+  }
+
+  .brush {
+    position: relative;
+  }
+
+  .brush.active::after {
+    content: "✓";
+    position: absolute;
+    top: 4px;
+    right: 5px;
+    display: flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #201c18;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    }
+
+    .app {
+      padding: 16px 18px 44px !important;
+    }
+
+    .topbar {
+      position: static !important;
+      padding: 0 0 12px !important;
+      background: transparent !important;
+    }
+
+    .topbar-panel {
+      padding: 17px !important;
+    }
+
+    .section-label {
+      margin-top: 16px;
+      font-size: 16px;
+    }
+
+    .brushes {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: calc(14px + env(safe-area-inset-bottom));
+      z-index: 100;
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 6px !important;
+      padding: 9px;
+      border: 2px solid var(--border-strong);
+      border-radius: 16px;
+      background: rgba(255,250,243,.98);
+      box-shadow: 0 8px 24px rgba(64,55,47,.16);
+    }
+
+    .brush {
+      min-height: 60px !important;
+      padding: 6px 1px !important;
+      border-radius: 10px;
+      font-size: 14px !important;
+    }
+
+    .brush::before {
+      width: 20px !important;
+      height: 20px !important;
+      margin-bottom: 4px !important;
+    }
+
+    .brush.active::after {
+      top: 3px;
+      right: 3px;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+    }
+
+    .status {
+      margin-top: 9px;
+      font-size: 16px;
+    }
+
+    .month-bar {
+      grid-template-columns: 86px minmax(0, 1fr) 86px !important;
+      margin-top: 14px;
+    }
+
+    .nav-btn {
+      min-height: 50px;
+      padding-inline: 5px !important;
+      font-size: 14px !important;
+      line-height: 1.2;
+    }
+
+    .utility-row {
+      display: grid !important;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px !important;
+    }
+
+    .utility-row .utility-btn {
+      width: 100%;
+      min-height: 48px;
+      padding: 7px 3px !important;
+      font-size: 14px !important;
+    }
+
+    .zoom-value {
+      display: none;
+    }
+
+    .hint {
+      margin: 12px 8px 10px !important;
+      padding: 12px 13px;
+      border-radius: 10px;
+      background: var(--panel);
+      font-size: 15px !important;
+      line-height: 1.65 !important;
+    }
+
+    .swipe-guide {
+      margin-inline: 8px;
+    }
+
+    .calendar-shell {
+      width: calc(100% - 8px) !important;
+      margin-inline: 4px !important;
+    }
+
+    .calendar-stage {
+      padding: 12px !important;
+    }
+
+    .legend,
+    .footer-actions,
+    .save-note {
+      margin-inline: 8px !important;
+    }
+
+    .settings-page {
+      padding: 16px 4px 0 !important;
+    }
+
+    .settings-card {
+      padding: 20px !important;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .app {
+      padding-inline: 16px !important;
+    }
+
+    .brushes {
+      left: 14px;
+      right: 14px;
+      gap: 4px !important;
+      padding: 8px;
+    }
+
+    .brush {
+      min-height: 58px !important;
+      font-size: 13px !important;
+    }
+
+    .month-bar {
+      grid-template-columns: 80px minmax(0, 1fr) 80px !important;
+    }
+
+    .topbar-panel {
+      padding: 16px !important;
+    }
+  }
+</style>
+
+
+<style id="v10-collapsible-and-fill-fix">
+  .tools-toggle {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 10px;
+    padding: 10px 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border: 2px solid var(--border-strong);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .tools-toggle-icon {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--panel-3);
+    font-size: 19px;
+    line-height: 1;
+  }
+
+  .more-tools {
+    margin-top: 8px;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-2);
+  }
+
+  .more-tools.hidden {
+    display: none !important;
+  }
+
+  .tool-help {
+    margin: 10px 2px 0;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.65;
+  }
+
+  /* Ensure the selected color fully fills the whole time bar */
+  .hour.blue,
+  .hour.green,
+  .hour.yellow,
+  .hour.blocked {
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  .hour.blue {
+    background-color: var(--blue) !important;
+    border-color: #335f8f !important;
+    color: #fff !important;
+  }
+
+  .hour.green {
+    background-color: var(--green) !important;
+    border-color: #356749 !important;
+    color: #fff !important;
+  }
+
+  .hour.yellow {
+    background-color: var(--yellow) !important;
+    border-color: #a88927 !important;
+    color: #2d271f !important;
+  }
+
+  .hour.blocked {
+    background:
+      repeating-linear-gradient(
+        135deg,
+        #5f5b57 0,
+        #5f5b57 7px,
+        #85807a 7px,
+        #85807a 14px
+      ) !important;
+    border-color: #4f4a46 !important;
+    color: #fff !important;
+  }
+
+  .hour.blue .hour-time,
+  .hour.blue .hour-name,
+  .hour.green .hour-time,
+  .hour.green .hour-name,
+  .hour.blocked .hour-time,
+  .hour.blocked .hour-name {
+    color: #fff !important;
+  }
+
+  .hour.yellow .hour-time,
+  .hour.yellow .hour-name {
+    color: #2d271f !important;
+  }
+
+  @media (max-width: 760px) {
+    .tools-toggle {
+      min-height: 50px;
+      font-size: 16px;
+    }
+
+    .more-tools {
+      padding: 10px;
+    }
+
+    .more-tools .utility-row {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px !important;
+    }
+
+    .more-tools .utility-row .utility-btn {
+      min-height: 48px;
+      width: 100%;
+    }
+
+    .more-tools .zoom-value {
+      display: flex !important;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel);
+    }
+  }
+</style>
+
+
+<style id="v12-mobile-safe-spacing">
+  /* 手機安全留白：避免任何主要內容貼近螢幕邊緣 */
+  @media (max-width: 760px) {
+    body {
+      padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+    }
+
+    .app {
+      width: 100% !important;
+      padding:
+        16px
+        max(20px, env(safe-area-inset-right))
+        46px
+        max(20px, env(safe-area-inset-left)) !important;
+    }
+
+    .topbar-panel {
+      padding: 18px !important;
+    }
+
+    .brand-row {
+      gap: 14px !important;
+    }
+
+    .settings-btn {
+      flex: 0 0 auto;
+      min-width: 76px;
+    }
+
+    .status,
+    .tools-toggle,
+    .more-tools,
+    .swipe-guide,
+    .calendar-shell,
+    .legend,
+    .footer-actions,
+    .save-note {
+      width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+
+    .month-bar {
+      width: 100%;
+      grid-template-columns: 80px minmax(0, 1fr) 80px !important;
+      gap: 8px !important;
+    }
+
+    .nav-btn {
+      min-width: 0;
+      padding-inline: 5px !important;
+    }
+
+    .calendar-stage {
+      padding: 12px !important;
+    }
+
+    /* 五個主要功能維持同一排，但整組向內縮 */
+    .brushes {
+      left: max(20px, env(safe-area-inset-left)) !important;
+      right: max(20px, env(safe-area-inset-right)) !important;
+      bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+      grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+      gap: 4px !important;
+      padding: 8px !important;
+      border-radius: 14px !important;
+    }
+
+    .brush {
+      min-width: 0 !important;
+      min-height: 58px !important;
+      padding: 6px 0 !important;
+      font-size: 13px !important;
+      border-radius: 9px !important;
+    }
+
+    .brush::before {
+      width: 19px !important;
+      height: 19px !important;
+      margin-bottom: 4px !important;
+    }
+
+    .brush.active::after {
+      top: 2px !important;
+      right: 2px !important;
+      width: 17px !important;
+      height: 17px !important;
+      font-size: 11px !important;
+    }
+
+    .settings-page {
+      width: 100%;
+      padding: 4px 0 0 !important;
+    }
+
+    .settings-card {
+      width: 100%;
+      padding: 20px !important;
+    }
+  }
+
+  /* 320px 小螢幕仍保留 18px，不讓按鈕貼邊 */
+  @media (max-width: 350px) {
+    .app {
+      padding-left: max(18px, env(safe-area-inset-left)) !important;
+      padding-right: max(18px, env(safe-area-inset-right)) !important;
+    }
+
+    .brushes {
+      left: max(18px, env(safe-area-inset-left)) !important;
+      right: max(18px, env(safe-area-inset-right)) !important;
+      gap: 3px !important;
+      padding: 7px !important;
+    }
+
+    .brush {
+      min-height: 56px !important;
+      font-size: 12px !important;
+    }
+
+    .month-bar {
+      grid-template-columns: 76px minmax(0, 1fr) 76px !important;
+      gap: 6px !important;
+    }
+  }
+</style>
+
+</head>
+<body>
+  <main class="app">
+    <section id="homePage">
+      <header class="topbar">
+        <div class="panel topbar-panel">
+          <div class="brand-row">
+            <div class="brand">
+              <h1 class="brand-title">交班月曆</h1>
+              <div id="currentUser" class="current-user">尚未設定姓名</div>
+            </div>
+            <button id="openSettings" class="settings-btn" type="button">姓名設定</button>
+          </div>
+
+          <span class="section-label">選功能 → 點時間</span>
+          <div class="brushes" role="group" aria-label="畫筆顏色">
+            <button class="brush active" type="button" data-brush="blue" aria-pressed="true">藍</button>
+            <button class="brush" type="button" data-brush="green" aria-pressed="false">綠</button>
+            <button class="brush" type="button" data-brush="yellow" aria-pressed="false">黃</button>
+            <button class="brush" type="button" data-brush="blocked" aria-pressed="false">不可</button>
+            <button class="brush" type="button" data-brush="erase" aria-pressed="false">清除</button>
+          </div>
+
+          <div id="status" class="status" aria-live="polite">
+            目前選擇：藍色
+          </div>
+
+          <div class="month-bar">
+            <button id="prevMonth" class="nav-btn" type="button">上個月</button>
+            <div id="monthTitle" class="month-title" aria-live="polite"></div>
+            <button id="nextMonth" class="nav-btn" type="button">下個月</button>
+          </div>
+
+          <button
+            id="toolsToggle"
+            class="tools-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="moreTools"
+          >
+            更多工具
+            <span class="tools-toggle-icon" aria-hidden="true">＋</span>
+          </button>
+
+          <div id="moreTools" class="more-tools hidden" aria-hidden="true">
+            <div class="utility-row">
+              <button id="zoomOut" class="utility-btn" type="button" aria-label="縮小月曆">縮小</button>
+              <span id="zoomValue" class="zoom-value">100%</span>
+              <button id="zoomIn" class="utility-btn" type="button" aria-label="放大月曆">放大</button>
+              <button id="zoomReset" class="utility-btn" type="button">原大小</button>
+              <button id="goToday" class="utility-btn" type="button">回到本月</button>
+            </div>
+
+            <p class="tool-help">
+              每一條長格代表 1 小時。先選功能，再點時間；要換色時，重新選顏色後再點一次。
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <div class="swipe-guide">← 左右滑動查看其他日期 →</div>
+
+      <section id="calendarShell" class="calendar-shell" aria-label="整月交班月曆">
+        <div class="calendar-stage">
+          <div class="weekdays" aria-hidden="true">
+            <div class="weekday sun">日</div>
+            <div class="weekday">一</div>
+            <div class="weekday">二</div>
+            <div class="weekday">三</div>
+            <div class="weekday">四</div>
+            <div class="weekday">五</div>
+            <div class="weekday sat">六</div>
+          </div>
+          <div id="calendar" class="calendar"></div>
+        </div>
+      </section>
+
+      <div class="legend" aria-label="顏色說明">
+        <span class="legend-item"><span class="dot blue"></span>藍色</span>
+        <span class="legend-item"><span class="dot green"></span>綠色</span>
+        <span class="legend-item"><span class="dot yellow"></span>黃色</span>
+        <span class="legend-item"><span class="dot blocked"></span>不能排</span>
+      </div>
+
+      <div class="footer-actions">
+        <button id="clearMonth" class="utility-btn danger" type="button">清除本月</button>
+        <button id="clearAll" class="utility-btn danger" type="button">清除全年</button>
+        <button id="printPage" class="utility-btn" type="button">列印／存成 PDF</button>
+      </div>
+
+      <p class="save-note">
+        資料會保存在目前裝置的瀏覽器中。不同手機不會自動同步；若要多人即時共用，
+        下一版需要串接雲端資料庫。
+      </p>
+    </section>
+
+    <section id="settingsPage" class="settings-page hidden" aria-label="設定頁">
+      <div class="panel settings-card">
+        <div class="settings-header">
+          <h2 class="settings-title">設定</h2>
+          <button id="closeSettings" class="back-btn" type="button">返回月曆</button>
+        </div>
+
+        <label class="field-label" for="personName">你的名字</label>
+        <input
+          id="personName"
+          class="name-input"
+          type="text"
+          maxlength="12"
+          autocomplete="name"
+          placeholder="例如：小美"
+        />
+        <p class="settings-help">
+          姓名會顯示在你填色的時段中。設定一次後，之後會保存在這支手機。
+        </p>
+
+        <div class="settings-actions">
+          <button id="saveSettings" class="save-btn" type="button">儲存並回到月曆</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const YEAR = 2026;
+      const STORAGE_KEY = "care-calendar-2026-v2";
+      const NAME_KEY = "care-calendar-name-v2";
+
+      const now = new Date();
+      let month = now.getFullYear() === YEAR ? now.getMonth() : 0;
+      let brush = "blue";
+      let scale = window.innerWidth <= 760 ? 0.88 : 1;
+      let schedule = loadSchedule();
+
+      const homePage = document.getElementById("homePage");
+      const settingsPage = document.getElementById("settingsPage");
+      const personName = document.getElementById("personName");
+      const currentUser = document.getElementById("currentUser");
+      const monthTitle = document.getElementById("monthTitle");
+      const calendar = document.getElementById("calendar");
+      const calendarShell = document.getElementById("calendarShell");
+      const status = document.getElementById("status");
+      const zoomValue = document.getElementById("zoomValue");
+      const prevMonthButton = document.getElementById("prevMonth");
+      const nextMonthButton = document.getElementById("nextMonth");
+
+      personName.value = localStorage.getItem(NAME_KEY) || "";
+      updateCurrentUser();
+
+      function loadSchedule() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : {};
+        } catch (error) {
+          console.warn("無法讀取既有資料", error);
+          return {};
+        }
+      }
+
+      function saveSchedule() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(schedule));
+        } catch (error) {
+          status.textContent = "儲存失敗，請確認瀏覽器是否允許網站儲存資料。";
+        }
+      }
+
+      function updateCurrentUser() {
+        const name = localStorage.getItem(NAME_KEY) || "";
+        currentUser.textContent = name ? `目前填寫人：${name}` : "尚未設定姓名";
+      }
+
+      function openSettings() {
+        personName.value = localStorage.getItem(NAME_KEY) || "";
+        homePage.classList.add("hidden");
+        settingsPage.classList.remove("hidden");
+        setTimeout(() => personName.focus(), 50);
+      }
+
+      function closeSettings() {
+        settingsPage.classList.add("hidden");
+        homePage.classList.remove("hidden");
+        updateCurrentUser();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function monthDays(targetMonth = month) {
+        return new Date(YEAR, targetMonth + 1, 0).getDate();
+      }
+
+      function dateKey(day) {
+        return `${YEAR}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      }
+
+      function slotKey(day, hour) {
+        return `${dateKey(day)}-${String(hour).padStart(2, "0")}`;
+      }
+
+      function endHour(hour) {
+        return String((hour + 1) % 24).padStart(2, "0");
+      }
+
+      function formatHour12(hour) {
+        const period = hour < 12 ? "AM" : "PM";
+        const displayHour = hour % 12 || 12;
+        return `${displayHour} ${period}`;
+      }
+
+      function formatRange12(hour) {
+        return `${formatHour12(hour)}–${formatHour12((hour + 1) % 24)}`;
+      }
+
+      function colorLabel(color) {
+        return {
+          blue: "藍色",
+          green: "綠色",
+          yellow: "黃色",
+          blocked: "不能排"
+        }[color] || color;
+      }
+
+      function render() {
+        monthTitle.textContent = `${YEAR} 年 ${month + 1} 月`;
+        prevMonthButton.disabled = month === 0;
+        nextMonthButton.disabled = month === 11;
+        calendar.innerHTML = "";
+
+        const firstWeekday = new Date(YEAR, month, 1).getDay();
+        const totalDays = monthDays();
+        const totalCells = Math.ceil((firstWeekday + totalDays) / 7) * 7;
+
+        for (let index = 0; index < totalCells; index += 1) {
+          const day = index - firstWeekday + 1;
+
+          if (day < 1 || day > totalDays) {
+            const empty = document.createElement("div");
+            empty.className = "day empty";
+            empty.setAttribute("aria-hidden", "true");
+            calendar.appendChild(empty);
+            continue;
+          }
+
+          calendar.appendChild(createDay(day));
+        }
+
+        applyScale();
+      }
+
+      function createDay(day) {
+        const isToday =
+          now.getFullYear() === YEAR &&
+          now.getMonth() === month &&
+          now.getDate() === day;
+
+        const dayElement = document.createElement("section");
+        dayElement.className = `day${isToday ? " today" : ""}`;
+        dayElement.setAttribute("aria-label", `${month + 1}月${day}日`);
+
+        const header = document.createElement("div");
+        header.className = "day-header";
+
+        const number = document.createElement("span");
+        number.className = "date-number";
+        number.textContent = day;
+
+        const count = document.createElement("span");
+        count.className = "filled-count";
+        const filled = Array.from({ length: 24 }, (_, hour) => schedule[slotKey(day, hour)])
+          .filter(Boolean).length;
+        count.textContent = filled ? `${filled} 小時` : "";
+
+        header.append(number, count);
+
+        const hours = document.createElement("div");
+        hours.className = "hours";
+
+        for (let hour = 0; hour < 24; hour += 1) {
+          hours.appendChild(createHourButton(day, hour));
+        }
+
+        dayElement.append(header, hours);
+        return dayElement;
+      }
+
+      function createHourButton(day, hour) {
+        const key = slotKey(day, hour);
+        const value = schedule[key];
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `hour${value ? ` ${value.color}` : ""}`;
+
+        const time = document.createElement("span");
+        time.className = "hour-time";
+        time.textContent = formatHour12(hour);
+
+        const name = document.createElement("span");
+        name.className = "hour-name";
+        name.textContent = value
+          ? value.color === "blocked"
+            ? "不可"
+            : value.name || ""
+          : "";
+
+        button.append(time, name);
+
+        const displayName =
+          value?.color === "blocked"
+            ? "，不能安排"
+            : value?.name
+              ? `，${value.name}`
+              : "";
+
+        button.setAttribute(
+          "aria-label",
+          `${month + 1}月${day}日 ${formatRange12(hour)}${displayName}`
+        );
+
+        button.addEventListener("click", () => paint(day, hour));
+        return button;
+      }
+
+      function paint(day, hour) {
+        const name = localStorage.getItem(NAME_KEY) || "";
+        const key = slotKey(day, hour);
+
+        if (brush !== "erase" && brush !== "blocked" && !name) {
+          status.textContent = "請先到設定頁輸入自己的名字。";
+          openSettings();
+          return;
+        }
+
+        if (brush === "erase") {
+          delete schedule[key];
+          status.textContent =
+            `${month + 1}月${day}日 ${formatRange12(hour)} 已清除。`;
+        } else {
+          schedule[key] = {
+            color: brush,
+            name: brush === "blocked" ? "" : name
+          };
+
+          const who = brush === "blocked" ? "不能安排" : `${name}・${colorLabel(brush)}`;
+          status.textContent =
+            `${month + 1}月${day}日 ${formatRange12(hour)}｜${who}`;
+        }
+
+        saveSchedule();
+        render();
+      }
+
+      function applyScale() {
+        scale = Math.max(0.72, Math.min(1.55, scale));
+        document.documentElement.style.setProperty("--day-width", `${Math.round(138 * scale)}px`);
+        document.documentElement.style.setProperty("--slot-height", `${Math.round(34 * scale)}px`);
+        zoomValue.textContent = `${Math.round(scale * 100)}%`;
+      }
+
+      function clearByPrefix(prefix) {
+        Object.keys(schedule).forEach((key) => {
+          if (key.startsWith(prefix)) delete schedule[key];
+        });
+        saveSchedule();
+        render();
+      }
+
+      document.querySelectorAll(".brush").forEach((button) => {
+        button.addEventListener("click", () => {
+          brush = button.dataset.brush;
+          document.querySelectorAll(".brush").forEach((item) => {
+            item.classList.remove("active");
+            item.setAttribute("aria-pressed", "false");
+          });
+          button.classList.add("active");
+          button.setAttribute("aria-pressed", "true");
+
+          status.textContent =
+            brush === "erase"
+              ? "已選橡皮擦，點已上色的小時格即可清除。"
+              : brush === "blocked"
+                ? "已選「不能排」，點小時格即可標記。"
+                : `已選${colorLabel(brush)}畫筆。`;
+        });
+      });
+
+      document.getElementById("openSettings").addEventListener("click", openSettings);
+      document.getElementById("closeSettings").addEventListener("click", closeSettings);
+
+      document.getElementById("saveSettings").addEventListener("click", () => {
+        const name = personName.value.trim();
+        if (!name) {
+          personName.focus();
+          personName.placeholder = "請輸入名字";
+          return;
+        }
+
+        const previousName = localStorage.getItem(NAME_KEY) || "";
+
+        localStorage.setItem(NAME_KEY, name);
+
+        Object.keys(schedule).forEach((key) => {
+          const entry = schedule[key];
+          if (!entry || entry.color === "blocked") return;
+
+          if (!previousName || entry.name === previousName) {
+            entry.name = name;
+          }
+        });
+
+        saveSchedule();
+        updateCurrentUser();
+        render();
+        closeSettings();
+        status.textContent = `已更新填寫人：${name}，既有時段名稱也已同步更換。`;
+      });
+
+      document.getElementById("prevMonth").addEventListener("click", () => {
+        if (month > 0) {
+          month -= 1;
+          render();
+          calendarShell.scrollTo({ left: 0, behavior: "smooth" });
+        }
+      });
+
+      document.getElementById("nextMonth").addEventListener("click", () => {
+        if (month < 11) {
+          month += 1;
+          render();
+          calendarShell.scrollTo({ left: 0, behavior: "smooth" });
+        }
+      });
+
+      document.getElementById("goToday").addEventListener("click", () => {
+        month = now.getFullYear() === YEAR ? now.getMonth() : 0;
+        render();
+      });
+
+      document.getElementById("zoomIn").addEventListener("click", () => {
+        scale += 0.1;
+        applyScale();
+      });
+
+      document.getElementById("zoomOut").addEventListener("click", () => {
+        scale -= 0.1;
+        applyScale();
+      });
+
+      document.getElementById("zoomReset").addEventListener("click", () => {
+        scale = window.innerWidth <= 760 ? 0.88 : 1;
+        applyScale();
+      });
+
+      document.getElementById("clearMonth").addEventListener("click", () => {
+        const ok = window.confirm(`確定清除 ${YEAR} 年 ${month + 1} 月的全部排班嗎？`);
+        if (!ok) return;
+        clearByPrefix(`${YEAR}-${String(month + 1).padStart(2, "0")}`);
+        status.textContent = `${month + 1}月已清除。`;
+      });
+
+      document.getElementById("clearAll").addEventListener("click", () => {
+        const ok = window.confirm(`確定清除 ${YEAR} 年的全部排班嗎？此動作無法復原。`);
+        if (!ok) return;
+        schedule = {};
+        saveSchedule();
+        render();
+        status.textContent = "全年排班已清除。";
+      });
+
+      document.getElementById("printPage").addEventListener("click", () => {
+        window.print();
+      });
+
+      let pinchStartDistance = 0;
+      let pinchStartScale = scale;
+
+      calendarShell.addEventListener(
+        "touchstart",
+        (event) => {
+          if (event.touches.length !== 2) return;
+          const [a, b] = event.touches;
+          pinchStartDistance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+          pinchStartScale = scale;
+        },
+        { passive: true }
+      );
+
+      calendarShell.addEventListener(
+        "touchmove",
+        (event) => {
+          if (event.touches.length !== 2 || !pinchStartDistance) return;
+          const [a, b] = event.touches;
+          const distance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+          scale = pinchStartScale * (distance / pinchStartDistance);
+          applyScale();
+        },
+        { passive: true }
+      );
+
+
+      const toolsToggle = document.getElementById("toolsToggle");
+      const moreTools = document.getElementById("moreTools");
+
+      toolsToggle.addEventListener("click", () => {
+        const isOpen = toolsToggle.getAttribute("aria-expanded") === "true";
+        const nextOpen = !isOpen;
+
+        toolsToggle.setAttribute("aria-expanded", String(nextOpen));
+        moreTools.setAttribute("aria-hidden", String(!nextOpen));
+        moreTools.classList.toggle("hidden", !nextOpen);
+
+        const icon = toolsToggle.querySelector(".tools-toggle-icon");
+        if (icon) icon.textContent = nextOpen ? "－" : "＋";
+      });
+
+      render();
+
+      if (!localStorage.getItem(NAME_KEY)) {
+        openSettings();
+      }
+    })();
+  </script>
+</body>
+</html>
