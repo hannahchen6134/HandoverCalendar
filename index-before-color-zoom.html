@@ -1599,7 +1599,7 @@
 
 <style id="v14-calendar-first-ui">
   /* 月曆優先：首頁只保留標題、月份與整月總覽。 */
-  :root { --overview-cell-height: 72px; --overview-width: 100%; }
+  :root { --overview-cell-height: 72px; }
   .status { display: none !important; }
   .topbar-panel { position: relative; }
   .detail-header { display: none; }
@@ -1645,45 +1645,11 @@
     gap: 2px;
     margin-top: 7px;
   }
-  .shift-mark { height: 4px; border-radius: 2px; background: transparent; }
-  .shift-mark.blue { background: #3f7fc5; }
-  .shift-mark.green { background: #3e9368; }
-  .shift-mark.yellow { background: #e4b62e; }
-  .shift-mark.blocked { background: #615c58; }
-  .day-color-summary { display: none; }
-  .calendar-shell.overview-mode.zoomed-overview { overflow-x: auto; overflow-y: hidden; }
-  .calendar-shell.overview-mode.zoomed-overview .calendar-stage {
-    width: var(--overview-width);
-    min-width: var(--overview-width);
-  }
-  .calendar-shell.overview-mode.zoomed-overview .day-overview {
-    min-height: var(--overview-cell-height);
-    padding: 7px;
-  }
-  .calendar-shell.overview-mode.zoomed-overview .overview-date { font-size: 18px; }
-  .calendar-shell.overview-mode.zoomed-overview .day-shift-strip { display: none; }
-  .calendar-shell.overview-mode.zoomed-overview .day-color-summary {
-    display: grid;
-    gap: 4px;
-    margin-top: 8px;
-  }
-  .color-summary-chip {
-    display: block;
-    min-width: 0;
-    padding: 4px 5px;
-    border-radius: 5px;
-    color: #17202a;
-    font-size: 12px;
-    font-weight: 950;
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .color-summary-chip.blue { background: #77abe3; }
-  .color-summary-chip.green { background: #73bc91; }
-  .color-summary-chip.yellow { background: #f0cc62; }
-  .color-summary-chip.blocked { background: #68635f; color: #fff; }
+  .shift-mark { height: 4px; border-radius: 2px; background: #ece7df; }
+  .shift-mark.blue { background: var(--blue); }
+  .shift-mark.green { background: var(--green); }
+  .shift-mark.yellow { background: var(--yellow); }
+  .shift-mark.blocked { background: #777; }
   .calendar-shell.detail-mode { overflow: visible; }
   .calendar-shell.detail-mode .weekdays { display: none; }
   .calendar-shell.detail-mode .detail-header {
@@ -2234,17 +2200,8 @@
           .filter(([, count]) => count)
           .map(([color, count]) => `${colorLabel(color)}${count}小時`)
           .join("、");
-        const colorSummary = document.createElement("span");
-        colorSummary.className = "day-color-summary";
-        Object.entries(counts).forEach(([color, count]) => {
-          if (!count) return;
-          const chip = document.createElement("span");
-          chip.className = `color-summary-chip ${color}`;
-          chip.textContent = `${colorLabel(color)} ${count}時`;
-          colorSummary.appendChild(chip);
-        });
         button.setAttribute("aria-label", `${month + 1}月${day}日${summary ? `，${summary}` : "，尚未排班"}，點一下排時間`);
-        button.append(date, strip, colorSummary);
+        button.append(date, strip);
         return button;
       }
 
@@ -2353,14 +2310,9 @@
 
       function applyScale() {
         scale = Math.max(0.72, Math.min(1.55, scale));
-        const viewportWidth = Math.max(360, Math.min(760, window.innerWidth - 16));
-        const overviewZoom = scale >= 1.18 ? scale * 1.7 : 1;
-        const overviewWidth = Math.round(viewportWidth * overviewZoom);
         document.documentElement.style.setProperty("--day-width", `${Math.round(138 * scale)}px`);
         document.documentElement.style.setProperty("--slot-height", `${Math.round(34 * scale)}px`);
         document.documentElement.style.setProperty("--overview-cell-height", `${Math.round(68 * scale)}px`);
-        document.documentElement.style.setProperty("--overview-width", `${overviewWidth}px`);
-        calendarShell.classList.toggle("zoomed-overview", viewMode === "month" && scale >= 1.18);
         zoomValue.textContent = `${Math.round(scale * 100)}%`;
       }
 
@@ -2647,17 +2599,10 @@
       }, { passive: true });
       calendarShell.addEventListener("touchmove", (event) => {
         if (event.touches.length !== 2 || !pinchStartDistance) return;
-        event.preventDefault();
         const [a, b] = event.touches;
         const distance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
         scale = pinchStartScale * (distance / pinchStartDistance);
         applyScale();
-      }, { passive: false });
-      calendarShell.addEventListener("touchend", (event) => {
-        if (event.touches.length < 2 && pinchStartDistance) {
-          pinchStartDistance = 0;
-          suppressClickUntil = Date.now() + 350;
-        }
       }, { passive: true });
 
       const toolsToggle = document.getElementById("toolsToggle");
